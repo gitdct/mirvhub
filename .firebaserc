@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "art3d-e7c95": {
+      "hosting": {
+        "mirvhub": [
+          "art3d-e7c95"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "art3d-e7c95"
+  }
+}

@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="clr-row">
+    <div class="clr-col-lg-6 clr-col-12" *ngFor="let model of Models">
+        <div class="card">
+            <div class="card-header">
+                {{model.name}}
+            </div>
+            <div class="card-block">
+                <div class="card-media-block">
+                    <img src="{{model.cover}}" class="card-media-image">
+                    <div class="card-media-description">
+                        <span class="card-media-title">
+                            Categoria: Naturaleza
+                        </span>
+                        <span class="card-media-text">
+                            Creado por: John Doe
+                        </span>
+                    </div>
+                </div>
+                <div class="card-text">
+                    Comentarios sobre donde se puede ver este recurso
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm btn-link">Descargar</button>
+            </div>
+        </div>
+    </div>
+</div>
