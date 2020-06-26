@@ -15,6 +15,7 @@ import { DropzoneDirective } from './dropzone.directive';
 import { ModelUploadComponent } from './model-upload/model-upload.component';
 import { environment } from 'src/environments/environment';
 import { HomeComponentComponent } from './home-component/home-component.component';
+import { ModelViewerComponent } from './model-viewer/model-viewer.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { HomeComponentComponent } from './home-component/home-component.componen
     ModelListComponent,
     DropzoneDirective,
     ModelUploadComponent,
-    HomeComponentComponent
+    HomeComponentComponent,
+    ModelViewerComponent
   ],
   imports: [
     BrowserModule,
