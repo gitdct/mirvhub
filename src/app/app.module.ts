@@ -1,6 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
 import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { environment } from 'src/environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,7 +17,6 @@ import { ModelFormComponent } from './model-form/model-form.component';
 import { ModelListComponent } from './model-list/model-list.component';
 import { DropzoneDirective } from './dropzone.directive';
 import { ModelUploadComponent } from './model-upload/model-upload.component';
-import { environment } from 'src/environments/environment';
 import { HomeComponentComponent } from './home-component/home-component.component';
 import { ModelViewerComponent } from './model-viewer/model-viewer.component';
 
@@ -34,9 +37,11 @@ import { ModelViewerComponent } from './model-viewer/model-viewer.component';
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
     AppRoutingModule,
     ClarityModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

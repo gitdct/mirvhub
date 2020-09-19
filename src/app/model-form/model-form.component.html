@@ -1,6 +1,6 @@
 <h2>Recursos MIRV</h2>
 <hr>
-<button class="btn  btn-outline" (click)="openForm()">Agregar un nuevo recurso</button>
+<button class="btn btn-outline" (click)="openForm()">Agregar un nuevo recurso</button>
 
 <clr-wizard #wizardlg [(clrWizardOpen)]="lgOpen" clrWizardSize="lg">
   <clr-wizard-title>Ingresa la información de tu modelo</clr-wizard-title>
@@ -8,20 +8,20 @@
   <clr-wizard-button [type]="'cancel'">Cancel</clr-wizard-button>
   <clr-wizard-button [type]="'previous'">Back</clr-wizard-button>
   <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
-  <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
+  <clr-wizard-button (click)="UploadForm()" [type]="'finish'">Finish</clr-wizard-button>
 
   <clr-wizard-page>
     <ng-template clrPageTitle> Modelo</ng-template>
     <div class="dropzone" dropzone
                         (hovered)= "toggleHover($event)"
-                        (dropped)= "onDrop($event)" 
+                        (dropped)= "onDrop($event.target.files)" 
                         [class.hovering]="isHovering">
   <h3>Subir objeto</h3>
   <p>Drag ad Drop any Model</p>
   
   <div class="file">
       <label for="file-label"> 
-      <input type="file" class="file-input" (change)="onDrop($event.target.files)">
+      <input type="file" class="file-input" (change)="assetbundleUpload($event.target.files)">
       </label>
   </div>
   <div *ngFor="let file of files">
@@ -34,23 +34,23 @@
       <ng-template clrPageTitle>Descripción</ng-template>
       <clr-input-container>
         <label>Nombre</label>
-        <input clrInput type="text"   name="example" />
+        <input clrInput type="text" name="example" [(ngModel)]="newRegistry.name"/>
     </clr-input-container>
     <clr-textarea-container>
       <label>Descripcion</label>
-      <textarea clrTextarea  name="descripción" required></textarea>
+      <textarea clrTextarea  name="descripción" [(ngModel)]="newRegistry.desc"></textarea>
     </clr-textarea-container>
     <clr-input-container>
       <label>Clave de materia</label>
-      <input clrInput type="text"   name="example" />
+      <input clrInput type="text" name="example" [(ngModel)]="newRegistry.subkey"/>
     </clr-input-container>
     <clr-input-container>
       <label>Categoría</label>
-      <input clrInput type="text"   name="example" />
+      <input clrInput type="text" name="example" [(ngModel)]="newRegistry.category"/>
     </clr-input-container>
     <clr-input-container>
       <label>Grupo</label>
-      <input clrInput type="text"   name="tipo" />
+      <input clrInput type="text" name="tipo" [(ngModel)]="newRegistry.group"/>
     </clr-input-container>
     <br>
     

@@ -1,21 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import {Model} from '../model'
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-main-container',
   templateUrl: './main-container.component.html',
   styleUrls: ['./main-container.component.css']
 })
-export class MainContainerComponent implements OnInit {
-  
-  Models = [
-    new Model('Manzana','#','nolink','nolink',[],'',[]),
-
-  ];
+export class MainContainerComponent {
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }
