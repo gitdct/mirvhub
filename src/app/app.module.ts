@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -19,6 +19,7 @@ import { DropzoneDirective } from './dropzone.directive';
 import { ModelUploadComponent } from './model-upload/model-upload.component';
 import { HomeComponentComponent } from './home-component/home-component.component';
 import { ModelViewerComponent } from './model-viewer/model-viewer.component';
+import { UserLoginSignupComponent } from './user-login-signup/user-login-signup.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { ModelViewerComponent } from './model-viewer/model-viewer.component';
     DropzoneDirective,
     ModelUploadComponent,
     HomeComponentComponent,
-    ModelViewerComponent
+    ModelViewerComponent,
+    UserLoginSignupComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import { ModelViewerComponent } from './model-viewer/model-viewer.component';
     AppRoutingModule,
     ClarityModule,
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
