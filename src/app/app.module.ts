@@ -4,22 +4,28 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+
 import { environment } from 'src/environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClarityModule } from '@clr/angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SideMenuComponent } from './side-menu/side-menu.component';
-import { MainContainerComponent } from './main-container/main-container.component';
-import { TopBarComponent } from './top-bar/top-bar.component';
-import { ModelFormComponent } from './model-form/model-form.component';
-import { ModelListComponent } from './model-list/model-list.component';
-import { DropzoneDirective } from './dropzone.directive';
-import { ModelUploadComponent } from './model-upload/model-upload.component';
-import { HomeComponentComponent } from './home-component/home-component.component';
-import { ModelViewerComponent } from './model-viewer/model-viewer.component';
-import { UserLoginSignupComponent } from './user-login-signup/user-login-signup.component';
+
+import { SideMenuComponent } from './components/side-menu/side-menu.component';
+import { MainContainerComponent } from './components/main-container/main-container.component';
+import { TopBarComponent } from './components/top-bar/top-bar.component';
+import { ModelFormComponent } from './components/model-form/model-form.component';
+import { ModelListComponent } from './components/model-list/model-list.component';
+import { ModelUploadComponent } from './components/model-upload/model-upload.component';
+import { HomeComponentComponent } from './components/home-component/home-component.component';
+import { ModelViewerComponent } from './components/model-viewer/model-viewer.component';
+import { UserSignupComponent } from './components/user-signup/user-signup.component';
+import { UserLoginComponent } from './components/user-login/user-login.component';
+
+import { NgxDropzoneModule } from 'ngx-dropzone';
+
+import { FirebaseMethodsService } from './services/firebase-methods.service';
 
 
 @NgModule({
@@ -30,11 +36,11 @@ import { UserLoginSignupComponent } from './user-login-signup/user-login-signup.
     TopBarComponent,
     ModelFormComponent,
     ModelListComponent,
-    DropzoneDirective,
     ModelUploadComponent,
     HomeComponentComponent,
     ModelViewerComponent,
-    UserLoginSignupComponent
+    UserSignupComponent,
+    UserLoginComponent
   ],
   imports: [
     BrowserModule,
@@ -44,9 +50,12 @@ import { UserLoginSignupComponent } from './user-login-signup/user-login-signup.
     ClarityModule,
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxDropzoneModule
   ],
-  providers: [],
+  providers: [
+    FirebaseMethodsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

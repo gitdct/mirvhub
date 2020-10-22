@@ -1,0 +1,11 @@
+.login
+{
+    min-height: unset;
+    width: 27.2rem;
+    background-color: var(--clr-modal-bg-color, white);
+}
+
+.modal-body
+{
+    padding: unset;
+}

@@ -2,7 +2,7 @@
     <a href="#" class="nav-link active">
         Acerca de MIRV
     </a>
-    <a routerLink="upload" class="nav-link">
+    <a routerLink="upload" class="nav-link" *ngIf="sessionData.active">
         Agregar nuevo recurso
     </a>
     <a routerLink="library" class="nav-link">

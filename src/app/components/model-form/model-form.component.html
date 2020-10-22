@@ -8,7 +8,7 @@
   <clr-wizard-button [type]="'cancel'">Cancel</clr-wizard-button>
   <clr-wizard-button [type]="'previous'">Back</clr-wizard-button>
   <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
-  <clr-wizard-button (click)="UploadForm()" [type]="'finish'">Finish</clr-wizard-button>
+  <clr-wizard-button (click)="uploadForm()" [type]="'finish'">Finish</clr-wizard-button>
 
 
   <clr-wizard-page>
@@ -25,7 +25,7 @@
 
   <clr-wizard-page>
     <ng-template clrPageTitle>información técnica</ng-template>
-    <div class="dropzone" dropzone
+    <!-- <div class="dropzone" dropzone
                         (hovered)= "toggleHover($event)"
                         (dropped)= "onDrop($event.target.files)" 
                         [class.hovering]="isHovering">
@@ -41,7 +41,17 @@
         <app-model-upload [file]="file"></app-model-upload>
       </div>
 
-    </div>
+    </div> -->
+
+
+    <ngx-dropzone (change)="onSelect($event)">
+      <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label>
+      <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+      </ngx-dropzone-preview>
+    </ngx-dropzone>
+
+
     <clr-input-container>
       <label>Ingresa portada</label>
       <label>

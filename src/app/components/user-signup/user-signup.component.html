@@ -1,5 +1,5 @@
 <clr-modal [(clrModalOpen)]="signup" [clrModalClosable]="false">
-    <div class="modal-body">
+    <div class="modal-body" *ngIf="signupView">
         <div class="login-wrapper">
             <form class="login" [formGroup]="user" (ngSubmit)="onSubmit()">
                 <section class="title">
@@ -54,45 +54,17 @@
                 </div>
             </form>
         </div>
-
-
-
-
-
-
-
-
-
-        <!-- <div class="login-wrapper">
-            <form class="login">
-                <section class="title">
-                    <h3 class="welcome">Bienvenido a</h3>
-                    MIRV HUB
-                    <h5 class="hint">Use your Company ID to sign in or create one now</h5>
-                </section>
-                <div class="login-group">
-                    <clr-input-container>
-                        <label class="clr-sr-only">Username</label>
-                        <input type="text" name="username" clrInput placeholder="Username"/>
-                    </clr-input-container>
-                    <clr-password-container>
-                        <label class="clr-sr-only">Password</label>
-                        <input type="password" name="password" clrPassword placeholder="Password"/>
-                    </clr-password-container>
-                    <clr-checkbox-wrapper>
-                        <label>Remember me</label>
-                        <input type="checkbox" name="rememberMe" clrCheckbox/>
-                    </clr-checkbox-wrapper>
-                    <div class="error active">
-                        Invalid user name or password
-                    </div>
-                    <button type="submit" class="btn btn-primary">NEXT</button>
-                    <a href="javascript://" class="signup">Sign up for a Company ID</a>
-                </div>
-            </form>
-        </div> -->
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer" *ngIf="signupView">
         <button type="button" class="btn btn-outline" (click)="cancel()">Cancel</button>
     </div>
+
+    <h3 class="modal-title" *ngIf="messageDisplay">Advertencia!</h3>
+    <div class="modal-body" *ngIf="messageDisplay">
+        <p>{{messageText}}</p>
+    </div>
+    <div class="modal-footer" *ngIf="messageDisplay">
+        <button type="button" class="btn btn-primary" (click)="messageFadeOut()">Ok</button>
+    </div>
 </clr-modal>
+

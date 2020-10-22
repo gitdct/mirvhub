@@ -1,11 +1,9 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
 import { ClrWizard } from '@clr/angular';
-import { Asset, ResourceType } from '../asset.model';
+import { Asset, ResourceType } from '../../models/Asset';
 
-import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { FirebaseMethodsService } from '../../services/firebase-methods.service';
 
 @Component({
   selector: 'app-model-form',
@@ -15,10 +13,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 
 export class ModelFormComponent  {
 
-  constructor(
-    private firestore: AngularFirestore,
-    private firestorage: AngularFireStorage
-  ) { }
+  constructor(private firebaseMethodsService: FirebaseMethodsService) { }
 
   keys = Object.keys;
   resourcetype = ResourceType;
@@ -26,7 +21,7 @@ export class ModelFormComponent  {
   @Input() assetbundlefile: File;
   @Input() fbxarrayfile: FileList;
 
-  task: AngularFireUploadTask;
+  
   percentage: Observable<number>;
   snapshot: Observable<any>;
   downloadURL: string;
@@ -52,16 +47,9 @@ export class ModelFormComponent  {
 
   @ViewChild("wizardlg") wizardLarge: ClrWizard;
 
-  UploadForm()
+  uploadForm()
   {
-    return new Promise<any>((resolve, reject) => {
-      this.firestore
-          .collection('assets')
-          .add(this.newRegistry)
-          .then((docRef) => {
-            this.startUploadAssetBundle(docRef.id);
-          }, err => reject(err));
-    })
+    this.firebaseMethodsService.uploadAssetData(this.newRegistry);
   }
 
   isHovering: boolean;
@@ -84,13 +72,7 @@ export class ModelFormComponent  {
 
   startUploadAssetBundle(id: string)
   {
-    const modelpath = `AssetBundles/${id}`;
-    const ref = this.firestorage.ref(modelpath);
-    this.task = this.firestorage.upload(modelpath, this.assetbundlefile);
-    this.percentage = this.task.percentageChanges();
-    this.firestore.collection('assets').doc(id).update({
-      assetbundle: modelpath
-    });
+    
     /* this.snapshot = this.task.snapshotChanges().pipe(
       tap(console.log),
       finalize( async() => {
@@ -99,5 +81,34 @@ export class ModelFormComponent  {
       }),
     ); */
   }
+
+
+
+
+
+
+
+
+  onSelect(event) {
+    console.log(event);
+    this.files.push(...event.addedFiles);
+
+    const formData = new FormData();
+
+    for (var i = 0; i < this.files.length; i++) { 
+      formData.append("file[]", this.files[i]);
+    }
+
+    /* this.http.post('http://localhost:8001/upload.php', formData)
+    .subscribe(res => {
+       console.log(res);
+       alert('Uploaded Successfully.');
+    }) */
+}
+
+onRemove(event) {
+    console.log(event);
+    this.files.splice(this.files.indexOf(event), 1);
+}
 
 }

@@ -1,0 +1,29 @@
+<header class="header-6">
+    <div class="branding">
+        <a href="javascript://" class="nav-link">
+            <span class="title">MIRV HUB</span>
+        </a>
+    </div>
+    <div class="header-actions">
+        <clr-dropdown [clrCloseMenuOnItemClick]="false" *ngIf="sessionData.active">
+            <button clrDropdownTrigger aria-label="Dropdown demo button">
+                <clr-icon shape="user"></clr-icon>
+                <span class="nav-text">{{sessionData.name}}</span>
+                <clr-icon shape="caret down"></clr-icon>
+            </button>
+            <clr-dropdown-menu clrPosition="bottom-right" *clrIfOpen>
+                <label class="dropdown-header" aria-hidden="true">Opciones de usuario</label>
+                <div aria-label="Dropdown header Action 1" (click)="signOut()" clrDropdownItem>Sign Out</div>
+            </clr-dropdown-menu>
+        </clr-dropdown>
+        <a href="#" (click)="loginInit()" class="nav-link nav-icon-text" *ngIf="!sessionData.active">
+            <span class="nav-text">Signin</span>
+        </a>
+        <a href="#" (click)="signupInit()" class="nav-link nav-icon-text" *ngIf="!sessionData.active">
+            <span class="nav-text">Signup</span>
+        </a>
+    </div>
+</header>
+
+<app-user-signup *ngIf="signup" [(signup)]="signup" (modalUpdate)="modalUpdate()"></app-user-signup>
+<app-user-login *ngIf="login" [(login)]="login" (modalUpdate)="modalUpdate()"></app-user-login>

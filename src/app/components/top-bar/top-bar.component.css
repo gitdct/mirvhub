@@ -1,0 +1,14 @@
+.titlehead{
+    margin: 25%;
+    color: aliceblue;
+}
+
+clr-icon[shape="user"]
+{
+    margin: 0 0.5rem;
+}
+
+button[aria-label="Dropdown demo button"]
+{
+    margin: 0 1.5rem 0 0;
+}
