@@ -2,6 +2,8 @@ import { Component, OnInit, NgZone } from '@angular/core';
 
 import { FirebaseMethodsService } from '../../services/firebase-methods.service';
 
+export let userName;
+
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
@@ -11,8 +13,8 @@ export class TopBarComponent implements OnInit {
 
   login: boolean = false;
   signup: boolean = false;
-  userName: string = null;
-  sessionData: {active: false, name: null};
+  
+  sessionData: {active: false, abbreviatedName: null, name: null};
 
   constructor(
     private firebaseMethodsService: FirebaseMethodsService,
@@ -25,8 +27,6 @@ export class TopBarComponent implements OnInit {
       sessionData => {
         this.ngZone.run(() => {
           this.sessionData = sessionData;
-          console.log(this.sessionData);
-          console.log(sessionData);
         });
       }
     );

@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth'
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
+export var User:string = null;
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +16,10 @@ export class FirebaseMethodsService {
 
   private task: AngularFireUploadTask;
 
+  private collectionData = [];
+
   constructor(
+    private db: AngularFireDatabase,
     private firestore: AngularFirestore,
     private firestorage: AngularFireStorage,
     private fireauth: AngularFireAuth,
@@ -26,27 +31,64 @@ export class FirebaseMethodsService {
     return this.sessionData.asObservable();
   }
 
+  getAssetData = async(assetId) =>
+  {
+    return await this.firestore.collection('assets').doc(assetId).ref.get().then((data) => {
+      return data.data();
+    });
+  }
+
+  getAllAssetData = async() =>
+  {
+    return await this.firestore.collection('assets').ref.get().then((data) => {
+      data.forEach((doc) => {
+        let element = doc.data();
+        element.id = doc.id;
+        this.collectionData.push(element);
+      });
+      return this.collectionData;
+    });
+  }
+  
+  getAllAssetsData()
+  {
+    return new Promise((res) => {
+      return this.db.database.ref('assets/').once('value').then((data) => {
+        data.forEach((element) => {
+          console.log(element.val());
+        })
+      });
+    });
+  }
+
   uploadAssetData(data)
   {
-    return new Promise<any>((resolve, reject) => {
+    return new Promise((res) => {
+      let id = this.db.createPushId();
+      return this.db.database.ref('assets/' + id).set(data).then(() => {
+        res(id);
+      });
+    })
+    /* return new Promise<any>((resolve, reject) => {
       this.firestore
           .collection('assets')
           .add(data)
           .then((docRef) => {
             this.uploadAssetFile(docRef.id);
           }, err => reject(err));
-    })
+    }) */
   }
 
-  uploadAssetFile(id)
+  uploadAssetFile(assetpath, file)
   {
-    const modelpath = `AssetBundles/${id}`;
-    const ref = this.firestorage.ref(modelpath);
-    /* this.task = this.firestorage.upload(modelpath, this.assetbundlefile); */
+    return new Promise((res) => {
+      const ref = this.firestorage.ref(assetpath);
+      return this.firestorage.upload(assetpath, file).then(() => {
+        res();
+      });
+
+    })
     /* this.percentage = this.task.percentageChanges(); */
-    this.firestore.collection('assets').doc(id).update({
-      assetbundle: modelpath
-    });
   }
 
   createUser = async(user): Promise<string> =>
@@ -88,20 +130,24 @@ export class FirebaseMethodsService {
   {
     let response = {};
     return new Promise<any>((resolve) => {
-      return this.fireauth.signInWithEmailAndPassword(user.email, user.password).then((res) => {
-        response = {status: true, text: '¡Bienvenido!'};
-        resolve(response);
-      }).catch((error) => {
-        if(error.code == 'auth/user-not-found')
-        {
-          response = {status: false, text: 'Usuario no encontrado'};
-        }
-        else if(error.code == 'auth/wrong-password')
-        {
-          response = {status: false, text: 'Contraseña erronea'};
-        }
-        resolve(response);
-      })
+
+      return this.fireauth.setPersistence('local').then(_ => {
+        return this.fireauth.signInWithEmailAndPassword(user.email, user.password).then((res) => {
+          response = {status: true, text: '¡Bienvenido!'};
+          resolve(response);
+        }).catch((error) => {
+          if(error.code == 'auth/user-not-found')
+          {
+            response = {status: false, text: 'Usuario no encontrado'};
+          }
+          else if(error.code == 'auth/wrong-password')
+          {
+            response = {status: false, text: 'Contraseña erronea'};
+          }
+          resolve(response);
+        });
+      });
+
     });
   }
 
@@ -112,9 +158,9 @@ export class FirebaseMethodsService {
     this.fireauth.onAuthStateChanged(function(user) {
       if (user) {
         let name = user.displayName.split(' ');
-        response = {active: true, name: `${name[0].substr(0, 1).toUpperCase()}${name[name.length - 1].substr(0, 1).toUpperCase()}`};
+        response = {active: true, abbreviatedName: `${name[0].substr(0, 1).toUpperCase()}${name[name.length - 1].substr(0, 1).toUpperCase()}`, name: user.displayName};
       } else {
-        response = {active: false, name: null};
+        response = {active: false, abbreviatedName: null, name: null};
         self.router.navigateByUrl('');
       }
       self.sessionData.next(response);

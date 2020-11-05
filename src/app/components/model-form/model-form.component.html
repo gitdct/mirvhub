@@ -2,29 +2,66 @@
 <hr>
 <button class="btn btn-outline" (click)="openForm()">Agregar un nuevo recurso</button>
 
+
 <clr-wizard #wizardlg [(clrWizardOpen)]="lgOpen" clrWizardSize="lg">
-  <clr-wizard-title>Ingresa la información de tu modelo</clr-wizard-title>
+  <clr-wizard-title>Ingresa la información del recurso que deseas subir</clr-wizard-title>
 
-  <clr-wizard-button [type]="'cancel'">Cancel</clr-wizard-button>
-  <clr-wizard-button [type]="'previous'">Back</clr-wizard-button>
-  <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
-  <clr-wizard-button (click)="uploadForm()" [type]="'finish'">Finish</clr-wizard-button>
+  <clr-wizard-button (click)="cancelForm()" [type]="'cancel'">Cancelar</clr-wizard-button>
+  <clr-wizard-button [type]="'previous'">Regresar</clr-wizard-button>
+  <clr-wizard-button [type]="'next'">Siguiente</clr-wizard-button>
+  <clr-wizard-button (click)="uploadForm()" [type]="'finish'">Finalizar</clr-wizard-button>
+  <clr-wizard-button class="btn btn-primary" (click)="llenarInfo()">Llenar info</clr-wizard-button>
 
 
-  <clr-wizard-page>
-    <ng-template clrPageTitle>Descripción</ng-template>
-    <clr-input-container>
+  <clr-wizard-page [clrWizardPageNextDisabled]="!formPageOne.valid">
+    <ng-template clrPageTitle>Información general</ng-template>
+    <form clrForm #formPageOne="ngForm">
+      <clr-input-container>
         <label>Nombre</label>
-        <input clrInput type="text" name="example" [(ngModel)]="newRegistry.name"/>
-    </clr-input-container>
-    <clr-textarea-container>
-      <label>Descripcion</label>
-      <textarea clrTextarea  name="descripción" [(ngModel)]="newRegistry.desc"></textarea>
-    </clr-textarea-container>
+          <input clrInput required type="text" [(ngModel)]="newRegistry.name" name="name"/>
+          <clr-control-helper>Coloque un nombre al recurso</clr-control-helper>
+          <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+      </clr-input-container>
+      <clr-textarea-container>
+        <label>Descripcion</label>
+        <textarea clrTextarea required [(ngModel)]="newRegistry.desc" name="desc"></textarea>
+        <clr-control-helper>Inserte una descripción breve</clr-control-helper>
+        <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+      </clr-textarea-container>
+    </form>
   </clr-wizard-page>
 
-  <clr-wizard-page>
-    <ng-template clrPageTitle>información técnica</ng-template>
+  <clr-wizard-page [clrWizardPageNextDisabled]="!formPageTwo.valid">
+    <ng-template clrPageTitle>Información del solicitante</ng-template>
+    <form clrForm #formPageTwo="ngForm">
+      <clr-input-container>
+          <label>Nombre</label>
+        <input clrInput required type="text" [(ngModel)]="newRegistry.solicitor.name" name="solicitorname">
+        <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+      </clr-input-container>
+      <clr-input-container>
+        <label>Email</label>
+        <input clrInput required type="text" [(ngModel)]="newRegistry.solicitor.email" name="solicitoremail">
+        <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+      </clr-input-container>
+      <clr-input-container>
+        <label>Materia</label>
+        <input clrInput required type="text" [(ngModel)]="newRegistry.solicitor.subject" name="solicitorsubject">
+        <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+      </clr-input-container>
+      <clr-select-container>
+        <label>Role</label>
+        <select clrSelect required name="options" [(ngModel)]="newRegistry.solicitor.role" name="solicitorrole">
+          <option *ngFor="let role of RoleTypes" [value]="role">{{role}}</option>
+        </select>
+        <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+      </clr-select-container>
+    </form>
+  </clr-wizard-page>
+
+
+  <clr-wizard-page [clrWizardPageNextDisabled]="newRegistry.file == null">
+    <ng-template clrPageTitle>Subir archivo</ng-template>
     <!-- <div class="dropzone" dropzone
                         (hovered)= "toggleHover($event)"
                         (dropped)= "onDrop($event.target.files)" 
@@ -43,65 +80,67 @@
 
     </div> -->
 
-
-    <ngx-dropzone (change)="onSelect($event)">
-      <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label>
-      <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
-        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+    <ngx-dropzone (change)="onSelect($event)" (maxFiles)="1" #assetFile>
+      <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+      <ngx-dropzone-preview [removable]="true" (removed)="onRemove()" *ngIf="newRegistry.file != null">
+        <ngx-dropzone-label>{{ newRegistry.file.name }}</ngx-dropzone-label>
       </ngx-dropzone-preview>
     </ngx-dropzone>
 
+    <div class="alert alert-danger" role="alert" *ngIf="fileDanger">
+      <div class="alert-items">
+          <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                  <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+              </div>
+              <span class="alert-text">Tipo de archivo no permitido.</span>
+          </div>
+      </div>
+    </div>
 
-    <clr-input-container>
-      <label>Ingresa portada</label>
-      <label>
-        <input type="file" class="file-input" id="" />
-    </label>
-    </clr-input-container>
-    
-    <clr-checkbox-container>
-      <label>Extensión</label>
-      <clr-checkbox-wrapper>
-        <input type="checkbox" clrCheckbox value="option1" name="options" />
-        <label>obj</label>
-      </clr-checkbox-wrapper>
-      <clr-checkbox-wrapper>
-        <input type="checkbox" clrCheckbox value="option2" name="options" />
-        <label>fbx</label>
-      </clr-checkbox-wrapper>
-      <clr-checkbox-wrapper>
-        <input type="checkbox" clrCheckbox value="option2" name="options" />
-        <label>mtl</label>
-      </clr-checkbox-wrapper>
-    </clr-checkbox-container>
-    
-    <clr-checkbox-container>
-      <label>Mapas</label>
-      <clr-checkbox-wrapper>
-        <input type="checkbox" clrCheckbox value="option1" name="options" />
-        <label>Albedo</label>
-      </clr-checkbox-wrapper>
-      <clr-checkbox-wrapper>
-        <input type="checkbox" clrCheckbox value="option2" name="options" />
-        <label>Roughtness</label>
-      </clr-checkbox-wrapper>
-      <clr-checkbox-wrapper>
-        <input type="checkbox" clrCheckbox value="option2" name="options" />
-        <label>Normal</label>
-      </clr-checkbox-wrapper>
-      <clr-checkbox-wrapper>
-        <input type="checkbox" clrCheckbox value="option2" name="options" />
-        <label>Metalness</label>
-      </clr-checkbox-wrapper>
-    </clr-checkbox-container>
+    <div class="alert alert-warning" role="alert" *ngIf="fileWarning">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">El unico archivo permitido para subir sin extensión es un assetbundle por favor asegurese que el archivo que esta por subir sea un assetbundle.</span>
+            </div>
+        </div>
+    </div>
   </clr-wizard-page>
 
-  <clr-wizard-page>
-    <ng-template clrPageTitle>Comentarios</ng-template>
-    <clr-textarea-container>
-      <label>Comentarios</label>
-      <textarea clrTextarea  name="comentarios" required></textarea>
-    </clr-textarea-container>
-  </clr-wizard-page>
+  <clr-wizard-page [clrWizardPageNextDisabled]="newRegistry.restype == 'assetbundle' && newRegistry.target == null">
+    <ng-template clrPageTitle>Subir target</ng-template>
+    <ngx-dropzone (change)="onSelectTarget($event)" (maxFiles)="1" #targetFile *ngIf="newRegistry.restype == 'assetbundle'">
+      <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+      <ngx-dropzone-preview [removable]="true" (removed)="onRemoveTarget()" *ngIf="newRegistry.target != null">
+        <ngx-dropzone-label>{{ newRegistry.file.name }}</ngx-dropzone-label>
+      </ngx-dropzone-preview>
+    </ngx-dropzone>
 
+    <div class="alert alert-danger" role="alert" *ngIf="fileDangerTarget">
+      <div class="alert-items">
+          <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                  <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+              </div>
+              <span class="alert-text">Tipo de archivo no permitido. Asegurese de subir un arhivo con extensión .jpg.</span>
+          </div>
+      </div>
+    </div>
+
+    <div class="alert alert-success" role="alert" *ngIf="newRegistry.restype != 'assetbundle'">
+      <div class="alert-items">
+          <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                  <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+              </div>
+              <span class="alert-text">El tipo de asset que desea subir no requiere de un target, por lo que puede finalizar dando clic en Finalizar.</span>
+          </div>
+      </div>
+  </div>
+  </clr-wizard-page>
 </clr-wizard>
+
+<app-modal-message [messageTitle]="messageTitle" [messageText]="messageText" (accept)="accept()" *ngIf="messageText != null"></app-modal-message>

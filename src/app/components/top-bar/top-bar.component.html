@@ -8,7 +8,7 @@
         <clr-dropdown [clrCloseMenuOnItemClick]="false" *ngIf="sessionData.active">
             <button clrDropdownTrigger aria-label="Dropdown demo button">
                 <clr-icon shape="user"></clr-icon>
-                <span class="nav-text">{{sessionData.name}}</span>
+                <span class="nav-text">{{sessionData.abbreviatedName}}</span>
                 <clr-icon shape="caret down"></clr-icon>
             </button>
             <clr-dropdown-menu clrPosition="bottom-right" *clrIfOpen>

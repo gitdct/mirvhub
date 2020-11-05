@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -26,7 +27,9 @@ import { UserLoginComponent } from './components/user-login/user-login.component
 import { NgxDropzoneModule } from 'ngx-dropzone';
 
 import { FirebaseMethodsService } from './services/firebase-methods.service';
-
+import { ModalMessageComponent } from './components/modal-message/modal-message.component';
+import { AssetsLibraryComponent } from './components/assets-library/assets-library.component';
+import { AssetCardComponent } from './components/asset-card/asset-card.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import { FirebaseMethodsService } from './services/firebase-methods.service';
     HomeComponentComponent,
     ModelViewerComponent,
     UserSignupComponent,
-    UserLoginComponent
+    UserLoginComponent,
+    ModalMessageComponent,
+    AssetsLibraryComponent,
+    AssetCardComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +57,8 @@ import { FirebaseMethodsService } from './services/firebase-methods.service';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxDropzoneModule
+    NgxDropzoneModule,
+    HttpClientModule
   ],
   providers: [
     FirebaseMethodsService
