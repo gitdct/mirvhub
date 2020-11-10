@@ -29,19 +29,6 @@ export class ModelFormComponent implements OnInit {
   
   public accept() {}
 
-  llenarInfo()
-  {
-    this.newRegistry.name = 'Prueba';
-    this.newRegistry.desc = 'Desc prueba';
-    this.newRegistry.restype = null;
-    this.newRegistry.createdat = new Date();
-    this.newRegistry.updatedat = [];
-    this.newRegistry.solicitor.name = 'Jonathan';
-    this.newRegistry.solicitor.email = 'jona@piu.com';
-    this.newRegistry.solicitor.subject = 'Ciencias';
-    this.newRegistry.solicitor.role = this.RoleTypes[0];
-  }
-
   @ViewChild("wizardlg") wizardLarge: ClrWizard;
   
   ngOnInit() {
@@ -49,7 +36,7 @@ export class ModelFormComponent implements OnInit {
       name: '',
       desc: '',
       restype: null,
-      createdat: new Date(),
+      createdat: new Date().getTime(),
       updatedat: [],
       solicitor: {
           name: null,
@@ -96,6 +83,7 @@ export class ModelFormComponent implements OnInit {
 
   uploadForm()
   {
+    console.log(this.newRegistry);
     this.firebaseMethodsService.uploadAssetData(this.newRegistry).then((id) => {
       this.firebaseMethodsService.uploadAssetFile(`assets/${id}`, this.newRegistry.file).then(() => {
         if(this.newRegistry.restype == 'assetbundle'){

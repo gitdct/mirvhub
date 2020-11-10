@@ -10,8 +10,6 @@
   <clr-wizard-button [type]="'previous'">Regresar</clr-wizard-button>
   <clr-wizard-button [type]="'next'">Siguiente</clr-wizard-button>
   <clr-wizard-button (click)="uploadForm()" [type]="'finish'">Finalizar</clr-wizard-button>
-  <clr-wizard-button class="btn btn-primary" (click)="llenarInfo()">Llenar info</clr-wizard-button>
-
 
   <clr-wizard-page [clrWizardPageNextDisabled]="!formPageOne.valid">
     <ng-template clrPageTitle>Información general</ng-template>

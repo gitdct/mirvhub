@@ -49,14 +49,36 @@ export class FirebaseMethodsService {
       return this.collectionData;
     });
   }
+
+  waitFor = (ms) => new Promise(r => setTimeout(r, ms));
+
+  dataTest: Observable<any>;
   
   getAllAssetsData()
   {
+    let allassetsdata = [];
     return new Promise((res) => {
-      return this.db.database.ref('assets/').once('value').then((data) => {
-        data.forEach((element) => {
-          console.log(element.val());
-        })
+      return this.db.database.ref('assets/').once('value').then(async data => {
+
+
+        data.forEach(element => {
+          let elem = {};
+          elem = element.val();
+          elem['id'] = element.key;
+          allassetsdata.push(elem);
+        });
+
+        for (let index = 0; index < allassetsdata.length; index++) {
+          allassetsdata[index]['downloadURL'] = await this.getAssetUrl(allassetsdata[index].id);
+        }
+        
+        /* allassetsdata.forEach(async element => {
+          this.getAssetUrl(element.id).then((url) => {
+            element['downloadURL'] = url;
+          });
+        }); */
+
+        res(allassetsdata);
       });
     });
   }
@@ -86,9 +108,17 @@ export class FirebaseMethodsService {
       return this.firestorage.upload(assetpath, file).then(() => {
         res();
       });
-
     })
     /* this.percentage = this.task.percentageChanges(); */
+  }
+
+  getAssetUrl(assetId): Promise<string>
+  {
+    return new Promise((res) => {
+      return this.firestorage.ref('assets/' + assetId).getDownloadURL().toPromise().then((url) => {
+        res(url);
+      });
+    })
   }
 
   createUser = async(user): Promise<string> =>

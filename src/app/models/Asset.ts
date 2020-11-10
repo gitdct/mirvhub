@@ -2,7 +2,7 @@ export interface Asset {
     name: string;
     desc?: string;
     restype: string;
-    createdat: Date;
+    createdat: number;
     updatedat: Date[];
     solicitor?: Solicitors;
     createdby: string;
