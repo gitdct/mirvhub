@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild, OnInit, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ClrWizard } from '@clr/angular';
-import { Asset, Role } from '../../models/Asset';
+import { Asset, Roles } from '../../models/Asset';
 
 import { FirebaseMethodsService, User } from '../../services/firebase-methods.service';
 
@@ -18,7 +18,7 @@ export class ModelFormComponent implements OnInit {
     private ngZone: NgZone
   ) { }
 
-  private Roles = Role;
+  public Roles = Roles;
   public RoleTypes = [];
   public newRegistry: Asset;
 
@@ -48,6 +48,7 @@ export class ModelFormComponent implements OnInit {
       updatedby: '',
       tags: [],
       file: null,
+      img: null,
       target: null
     }
     this.firebaseMethodsService.sessionIsActive().subscribe(
@@ -72,6 +73,7 @@ export class ModelFormComponent implements OnInit {
   fileWarning: boolean = false;
   fileDanger: boolean = false;
   fileDangerTarget: boolean = false;
+  fileDangerImage: boolean = false;
 
   
   lgOpen: boolean = false;
@@ -86,13 +88,15 @@ export class ModelFormComponent implements OnInit {
     console.log(this.newRegistry);
     this.firebaseMethodsService.uploadAssetData(this.newRegistry).then((id) => {
       this.firebaseMethodsService.uploadAssetFile(`assets/${id}`, this.newRegistry.file).then(() => {
-        if(this.newRegistry.restype == 'assetbundle'){
-          this.firebaseMethodsService.uploadAssetFile(`targets/${id}.jpg`, this.newRegistry.target).then(() => {
+        this.firebaseMethodsService.uploadAssetFile(`img/${id}.jpg`, this.newRegistry.img).then(() => {
+          if(this.newRegistry.restype == 'assetbundle'){
+            this.firebaseMethodsService.uploadAssetFile(`targets/${id}.jpg`, this.newRegistry.target).then(() => {
+              this.endForm();
+            });
+          }else{
             this.endForm();
-          });
-        }else{
-          this.endForm();
-        }
+          }
+        });
       });
     });
   }
@@ -177,12 +181,35 @@ export class ModelFormComponent implements OnInit {
     }
   }
 
+  onSelectImage(event) {
+    this.fileDangerImage = false;
+    let fileProps = event.addedFiles[0].name.split('.');
+
+    if(fileProps.length == 1){
+      this.fileDangerImage = true;
+    }else if(fileProps.length == 2){
+      if(fileProps[1] == 'jpg'){
+        this.newRegistry.img = event.addedFiles[0];
+      }else{
+        this.fileDangerImage = true;
+        return;
+      }
+    }else{
+      this.fileDangerImage = true;
+      return;
+    }
+  }
+
   onRemove() {
     this.newRegistry.file = null;
   }
 
   onRemoveTarget() {
     this.newRegistry.target = null;
+  }
+
+  onRemoveImage() {
+    this.newRegistry.img = null;
   }
 
 }

@@ -1,0 +1,12 @@
+.card-columns {
+    margin: 1rem auto;
+    column-count: 5;
+}
+
+@media only screen and (max-width: 1620px) {
+    /* For mobile phones: */
+    .card-columns {
+        column-count: 4;
+    }
+}
+

@@ -1,5 +1,5 @@
-<div class="clr-row" *ngFor="let assetchunk of assets">
-    <div class="clr-col-lg-4 clr-col-12" *ngFor="let asset of assetchunk">
-        <app-asset-card [downloadURL]="asset.downloadURL" [name]="asset.name" [desc]="asset.desc" [restype]="asset.restype" [createdat]="asset.createdat"></app-asset-card>
-    </div>
+<div class="card-columns">
+    <!-- <div > -->
+        <app-asset-card *ngFor="let asset of assets" [img]="asset.imgURL" [downloadURL]="asset.downloadURL" [name]="asset.name" [desc]="asset.desc" [restype]="asset.restype" [createdat]="asset.createdat"></app-asset-card>
+    <!-- </div> -->
 </div>

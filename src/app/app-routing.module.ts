@@ -6,11 +6,13 @@ import { HomeComponentComponent } from './components/home-component/home-compone
 import { ModelFormComponent } from './components/model-form/model-form.component';
 import { ModelViewerComponent } from './components/model-viewer/model-viewer.component';
 
+import { AuthGuardService } from './services/auth-guard.service';
+
 const routes: Routes = [
   {path: '', component: HomeComponentComponent},
   {path: 'library', component: AssetsLibraryComponent },
   {path: 'side', component: SideMenuComponent},
-  {path: 'upload', component: ModelFormComponent },
+  {path: 'upload', component: ModelFormComponent, canActivate: [AuthGuardService] },
   {path: 'visualizer', component: ModelViewerComponent},
   {path: '**', component: HomeComponentComponent} 
 ];

@@ -50,7 +50,7 @@
       <clr-select-container>
         <label>Role</label>
         <select clrSelect required name="options" [(ngModel)]="newRegistry.solicitor.role" name="solicitorrole">
-          <option *ngFor="let role of RoleTypes" [value]="role">{{role}}</option>
+          <option *ngFor="let role of Roles" [value]="role.value">{{role.key}}</option>
         </select>
         <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
       </clr-select-container>
@@ -60,30 +60,48 @@
 
   <clr-wizard-page [clrWizardPageNextDisabled]="newRegistry.file == null">
     <ng-template clrPageTitle>Subir archivo</ng-template>
+    <div class="m5p1p">
+      Suba su archivo arrastrandolo al cuadro o dando clic en el cuadro y seleccionand su archivo.
+    </div>
     <!-- <div class="dropzone" dropzone
-                        (hovered)= "toggleHover($event)"
-                        (dropped)= "onDrop($event.target.files)" 
-                        [class.hovering]="isHovering">
+      (hovered)= "toggleHover($event)"
+      (dropped)= "onDrop($event.target.files)" 
+      [class.hovering]="isHovering">
       <h3>Subir objeto</h3>
       <p>Drag and Drop any Model</p>
 
       <div class="file">
         <label for="file-label"> 
-        <input type="file" name="file" class="file-input" (change)="assetbundleUpload($event.target.files)">
+          <input type="file" name="file" class="file-input" (change)="assetbundleUpload($event.target.files)">
         </label>
       </div>
       <div *ngFor="let file of files">
         <app-model-upload [file]="file"></app-model-upload>
       </div>
-
+      
     </div> -->
-
+    
     <ngx-dropzone (change)="onSelect($event)" (maxFiles)="1" #assetFile>
       <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
       <ngx-dropzone-preview [removable]="true" (removed)="onRemove()" *ngIf="newRegistry.file != null">
         <ngx-dropzone-label>{{ newRegistry.file.name }}</ngx-dropzone-label>
       </ngx-dropzone-preview>
     </ngx-dropzone>
+    
+    <div class="m5p1p">
+      <div class="alert alert-info" role="alert">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
+                </div>
+                <span class="alert-text">
+                    Las unicas extensiones permitidas son: assetbundle .fbx .mat
+                </span>
+            </div>
+        </div>
+      </div>
+    </div>
 
     <div class="alert alert-danger" role="alert" *ngIf="fileDanger">
       <div class="alert-items">
@@ -108,12 +126,34 @@
     </div>
   </clr-wizard-page>
 
+  <clr-wizard-page [clrWizardPageNextDisabled]="newRegistry.img == null">
+    <ng-template clrPageTitle>Subir imagen</ng-template>
+    <ngx-dropzone (change)="onSelectImage($event)" (maxFiles)="1" #imgFile>
+      <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+      <ngx-dropzone-preview [removable]="true" (removed)="onRemoveImage()" *ngIf="newRegistry.img != null">
+        <ngx-dropzone-label>{{ newRegistry.img.name }}</ngx-dropzone-label>
+      </ngx-dropzone-preview>
+    </ngx-dropzone>
+
+    <div class="alert alert-danger" role="alert" *ngIf="fileDangerImage">
+      <div class="alert-items">
+          <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                  <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+              </div>
+              <span class="alert-text">Tipo de archivo no permitido. Asegurese de subir un arhivo con extensión .jpg.</span>
+          </div>
+      </div>
+    </div>
+  </clr-wizard-page>
+
   <clr-wizard-page [clrWizardPageNextDisabled]="newRegistry.restype == 'assetbundle' && newRegistry.target == null">
+
     <ng-template clrPageTitle>Subir target</ng-template>
     <ngx-dropzone (change)="onSelectTarget($event)" (maxFiles)="1" #targetFile *ngIf="newRegistry.restype == 'assetbundle'">
       <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
       <ngx-dropzone-preview [removable]="true" (removed)="onRemoveTarget()" *ngIf="newRegistry.target != null">
-        <ngx-dropzone-label>{{ newRegistry.file.name }}</ngx-dropzone-label>
+        <ngx-dropzone-label>{{ newRegistry.target.name }}</ngx-dropzone-label>
       </ngx-dropzone-preview>
     </ngx-dropzone>
 
@@ -137,7 +177,7 @@
               <span class="alert-text">El tipo de asset que desea subir no requiere de un target, por lo que puede finalizar dando clic en Finalizar.</span>
           </div>
       </div>
-  </div>
+    </div>
   </clr-wizard-page>
 </clr-wizard>
 

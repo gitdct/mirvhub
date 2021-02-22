@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 export var User:string = null;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -70,6 +71,7 @@ export class FirebaseMethodsService {
 
         for (let index = 0; index < allassetsdata.length; index++) {
           allassetsdata[index]['downloadURL'] = await this.getAssetUrl(allassetsdata[index].id);
+          allassetsdata[index]['imgURL'] = await this.getImageUrl(allassetsdata[index].id);
         }
         
         /* allassetsdata.forEach(async element => {
@@ -121,14 +123,23 @@ export class FirebaseMethodsService {
     })
   }
 
-  createUser = async(user): Promise<string> =>
+  getImageUrl(assetId): Promise<string>
+  {
+    return new Promise((res) => {
+      return this.firestorage.ref('img/' + assetId + '.jpg').getDownloadURL().toPromise().then((url) => {
+        res(url);
+      });
+    })
+  }
+
+  createUser = async(user): Promise<any> =>
   {
     let firestore = this.firestore
     return await this.fireauth.createUserWithEmailAndPassword(user.email, user.password).then(async(userCreds) => {
       return await userCreds.user.updateProfile({
         displayName: `${user.name} ${user.lastname}`
       }).then(() => {
-        return 'Usuario creado exitosamente';
+        return {resbool: true, text: 'Usuario creado exitosamente'};
       });
       /* firestore
           .collection('users')
@@ -143,15 +154,15 @@ export class FirebaseMethodsService {
     }).catch(function(error) {
       switch (error.code) {
         case 'auth/email-already-in-use':
-          return `La cuenta ${user.email} ya esta en uso.`;
+          return {resbool: false, text: `La cuenta ${user.email} ya esta en uso.`};
         case 'auth/invalid-email':
-          return `La cuenta ${user.email} es invalida.`;
+          return {resbool: false, text: `La cuenta ${user.email} es invalida.`};
         case 'auth/operation-not-allowed':
-          return `Error! Operación no permitida.`;
+          return {resbool: false, text: `Error! Operación no permitida.`};
         case 'auth/weak-password':
-          return 'El password no es lo suficientemente fuerte. Añada caracteres adicionales caracteres especiales y numeros.';
+          return {resbool: false, text: 'El password no es lo suficientemente fuerte. Añada caracteres adicionales caracteres especiales y numeros.'};
         default:
-          return error.message;
+          return {resbool: false, text: error.message};
       }
     });
   }

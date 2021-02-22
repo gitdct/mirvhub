@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 
 import { FirebaseMethodsService } from '../../services/firebase-methods.service';
 
@@ -17,6 +17,7 @@ export class UserSignupComponent implements OnInit {
   messageDisplay: boolean = false;
   messageText: string;
   user: FormGroup;
+  closesignup: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,8 +29,9 @@ export class UserSignupComponent implements OnInit {
     this.user = this.fb.group({
       name: ['', Validators.required],
       lastname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._-]+@tec.mx$/)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      valid_password: ['', [Validators.required, Validators.minLength(6), this.checkPasswords]]
     });
     this.signupView = true;
   }
@@ -45,7 +47,8 @@ export class UserSignupComponent implements OnInit {
     }
 
     const response = this.firebaseMethodsService.createUser(this.user.value).then((res) => {
-      this.messageFadeIn(res);
+      this.closesignup = res.resbool;
+      this.messageFadeIn(res.text);
     });
     
     this.submitted = false;
@@ -72,4 +75,13 @@ export class UserSignupComponent implements OnInit {
     this.messageDisplay = false;
   }
 
+  checkPasswords(control: AbstractControl) {
+    if(control.parent){
+      if(control.value !== control.parent.controls['password'].value){
+        return { notSame: true };
+      }else{
+        return null;
+      }
+    }
+  }
 }

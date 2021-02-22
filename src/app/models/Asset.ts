@@ -9,6 +9,7 @@ export interface Asset {
     updatedby: string;
     tags?: string[];
     file: File;
+    img: File;
     target: File;
 }
 
@@ -16,11 +17,11 @@ interface Solicitors {
     name?: string;
     email: string;
     subject: string;
-    role: Role;
+    role: string;
 }
 
-export enum Role {
-    Maestro = 'Maestro',
-    DI = 'DI',
-    AP = 'AP'
-}
+export const Roles = [
+    { key: 'Maestro', value: 'Maestro'},
+    { key: 'DI', value: 'Diseñador Instruccional'},
+    { key: 'AP', value: 'Administrador de Proyecto'}
+]

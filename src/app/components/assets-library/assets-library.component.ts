@@ -17,7 +17,9 @@ export class AssetsLibraryComponent implements OnInit {
 
   ngOnInit(): void {
     this.firebaseMethodsService.getAllAssetsData().then((data) => {
-      this.assets = this.chunks(data, 3);
+      this.assets = data;
+      /* this.assets = this.chunks(data, 4); */
+      console.log(this.assets);
     });
   }
 
