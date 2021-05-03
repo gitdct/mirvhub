@@ -1,0 +1,7 @@
+.modal-body {
+    overflow-y: hidden;
+    height: 170px;
+}
+clr-input-container, clr-select-container {
+    margin: 2%;
+}

@@ -1,0 +1,116 @@
+<form class="clr-form clr-form-compact">
+  <div class="clr-form-control">
+    <label for="example9" class="clr-control-label">Nombre</label>
+    <div class="clr-control-container">
+      <div class="clr-input-wrapper">
+        <input type="text" [(ngModel)]="asset.name" name="name" class="clr-input" />
+      </div>
+    </div>
+  </div>
+  <div class="clr-form-control">
+    <label for="example11" class="clr-control-label">Descripción</label>
+    <div class="clr-control-container">
+      <div class="clr-textarea-wrapper">
+        <textarea [(ngModel)]="asset.description" name="description" class="clr-textarea"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="clr-form-control">
+    <label for="example11" class="clr-control-label">Creado por</label>
+    <div class="clr-control-container">
+      <div class="clr-textarea-wrapper">
+        <input type="text" [ngModel]="asset.createdby" name="createdby" class="clr-input" [readonly]="true" />
+      </div>
+    </div>
+  </div>
+  
+  
+  <cds-divider></cds-divider>
+
+  <clr-dropdown>
+    <button clrDropdownTrigger class="dropdown-toggle btn btn-primary">
+      Solicitantes
+      <clr-icon shape="caret down"></clr-icon>
+    </button>
+    <clr-dropdown-menu *clrIfOpen clrPosition="bottom-left">
+      <a [routerLink]="" queryParamsHandling="preserve" (click)="selectSolicitor(solicitor)" clrDropdownItem *ngFor="let solicitor of solicitors; let i = index">{{solicitor.name}}</a>
+    </clr-dropdown-menu>
+  </clr-dropdown>
+
+  <p class="p6">Para añadir nuevo solicitante clic <a [routerLink]="[{outlets: { 'auxiliar': ['solicitor-form']}}]">aqui</a></p>
+  
+  <form clrForm #formPageTwo="ngForm">
+    <clr-input-container>
+        <label>Nombre</label>
+      <input clrInput type="text" [(ngModel)]="solicitorForm.name" name="solicitorname" [readonly]="true">
+      <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+    </clr-input-container>
+    <clr-input-container>
+      <label>Email</label>
+      <input clrInput type="text" [(ngModel)]="solicitorForm.email" name="solicitoremail" [readonly]="true">
+      <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+    </clr-input-container>
+    <clr-input-container>
+      <label>Materia</label>
+      <input #solicitorsubject clrInput [(ngModel)]="solicitorForm.subject" type="text" name="solicitorsubject" [readonly]="true">
+      <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+    </clr-input-container>
+    <clr-input-container>
+      <label>Rol</label>
+      <input #solicitorrole clrInput [(ngModel)]="solicitorForm.role" type="text" name="solicitorrole" [readonly]="true">
+      <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+    </clr-input-container>
+    
+  </form>
+
+  <cds-divider></cds-divider>
+  
+  <div class="clr-form-control img-section">
+    <div class="flex-columns">
+      <p><b>Imagen actual</b></p>
+      <p><img [src]="imgURL"></p>
+      <p>Suba una imagen de previsualización del registro si desea cambiar la actual.</p>
+      <br>
+      <ngx-dropzone (change)="onDropImage($event)" (maxFiles)="1" #imgFile>
+        <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+        <ngx-dropzone-image-preview [file]="fileImage" *ngIf="fileImage != null" [removable]="true" (removed)="onRemoveImage()">
+          Nueva Imagen
+        </ngx-dropzone-image-preview>
+      </ngx-dropzone>
+      
+      <div class="alert alert-danger" role="alert" *ngIf="fileDangerMessage >= 0">
+        <div class="alert-items">
+          <div class="alert-item static">
+            <div class="alert-icon-wrapper">
+              <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+            </div>
+            <span class="alert-text">{{fileMessages[fileDangerMessage]}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <cds-divider></cds-divider>
+
+  <div class="clr-form-control">
+    <div class="flex-columns">
+      <p>Elija los tags que usted considere que tienen relación con el recurso que esta subiendo,<br>
+        si no encuentra algun tag o desea agregar uno nuevo de clic <a [routerLink]="[{outlets: { 'auxiliar': ['tag-form']}}]">aqui</a></p>
+      <div>
+        <span class="label clickable" [ngClass]="(tagsSelected.indexOf(tag.id) >= 0) ? 'label-info' : 'label-light-blue'" *ngFor="let tag of tags" (click)="onTagSelect(tag.id, $event)">{{tag.tag}} <clr-icon shape="times" *ngIf="tagsSelected.indexOf(tag.id) >= 0"></clr-icon></span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="clr-form-control" style="margin-top:5%">
+    <div>
+      <button class="btn btn-outline" [routerLink]="['library']">Cancelar</button>
+      <button class="btn btn-success" (click)="submit()">Actualizar</button>
+    </div>    
+  </div>
+
+</form>
+
+<router-outlet name="auxiliar"></router-outlet>
+<app-modal-message [messageTitle]="'Actualización finalizada'" [messageText]="messageText" (accept)="accept()" *ngIf="messageText != null"></app-modal-message>

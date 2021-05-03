@@ -1,8 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { FirebaseMethodsService } from '../../services/firebase-methods.service';
-
-export let userName;
 
 @Component({
   selector: 'app-top-bar',
@@ -11,25 +10,23 @@ export let userName;
 })
 export class TopBarComponent implements OnInit {
 
-  login: boolean = false;
-  signup: boolean = false;
-  
-  sessionData: {active: false, abbreviatedName: null, name: null};
+  public login: boolean = false;
+  public signup: boolean = false;
+  public sessionData;
+  public sessionDataSubscription: Subscription;
 
   constructor(
-    private firebaseMethodsService: FirebaseMethodsService,
+    public firebaseMethodsService: FirebaseMethodsService,
     private ngZone: NgZone
   ) {  }
 
   ngOnInit()
   {
-    this.firebaseMethodsService.sessionIsActive().subscribe(
-      sessionData => {
-        this.ngZone.run(() => {
-          this.sessionData = sessionData;
-        });
-      }
-    );
+    this.sessionDataSubscription = this.firebaseMethodsService.sessionData.subscribe(data => {
+      this.ngZone.run(() => {
+        this.sessionData = {...data};
+      });
+    });
     this.firebaseMethodsService.userStateChanged();
   }
 
@@ -54,6 +51,9 @@ export class TopBarComponent implements OnInit {
   signOut()
   {
     this.firebaseMethodsService.userSignOut();
-    /* this.userName = null; */
+  }
+
+  ngOnDestroy() {
+    this.sessionDataSubscription.unsubscribe();
   }
 }

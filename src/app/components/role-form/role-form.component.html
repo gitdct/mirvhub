@@ -1,0 +1,21 @@
+<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false">
+    <h3 class="modal-title" *ngIf="!roleCreationSuccess">Agregar rol</h3>
+    <h3 class="modal-title" *ngIf="roleCreationSuccess">¡Alta Exitosa!</h3>
+    <div class="modal-body">
+        <div *ngIf="!roleCreationSuccess">
+            <p>Ingrese el nombre del nuevo rol que desea añadir</p>
+            <div class="flex">
+                <clr-input-container>
+                    <label>Nombre del rol</label>
+                    <input clrInput placeholder="Nombre del rol" name="key" [(ngModel)]="newRole.value"/>
+                </clr-input-container>
+            </div>
+        </div>
+        <clr-alert [clrAlertType]="'danger'" [clrAlertIcon]="'exclamation-circle'" [clrAlertClosable]="false" *ngIf="roleAlreadyExists"><clr-alert-item>Este rol ya existe. Verifique nuevamente el rol que desea agregar.</clr-alert-item></clr-alert>
+        <clr-alert [clrAlertType]="'success'" [clrAlertIcon]="'success-standard'" [clrAlertClosable]="false" *ngIf="roleCreationSuccess"><clr-alert-item>El rol {{newRole.value}} fue dado de alta exitosamente.</clr-alert-item></clr-alert>
+    </div>
+    <div class="modal-footer" *ngIf="!roleCreationSuccess">
+      <button type="button" class="btn btn-outline" [routerLink]="['../']">Cancelar</button>
+      <button type="button" class="btn btn-primary" (click)="submitRole()" [disabled]="newRole.value == null || newRole.value == ''">Agregar Rol</button>
+    </div>
+</clr-modal>

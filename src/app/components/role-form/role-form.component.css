@@ -1,0 +1,7 @@
+.modal-body {
+    overflow-y: hidden !important;
+}
+clr-input-container {
+    margin-right: 2%;
+    margin-left: 2%;
+}

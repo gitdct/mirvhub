@@ -1,27 +1,39 @@
+import { userInfo } from "os"
+import { by } from "protractor"
+
 export interface Asset {
     name: string;
-    desc?: string;
-    restype: string;
+    description: string;
     createdat: number;
-    updatedat: Date[];
-    solicitor?: Solicitors;
     createdby: string;
-    updatedby: string;
+    solicitor?: Solicitor;
     tags?: string[];
-    file: File;
-    img: File;
-    target: File;
+    files: Files;
+    target: boolean;
+    assetbundle: boolean;
+    imgext: string;
+    tarext?: string;
 }
-
-interface Solicitors {
+interface Files {
+    fbx?: FileProps[],
+    glb?: FileProps[],
+    obj?: FileProps[],
+    andab?: FileProps[],
+    iosab?: FileProps[]
+}
+interface FileProps {
+    name?: string;
+    type: string;
+    size: number;
+    uploadedBy?: string;
+}
+export interface Solicitor {
     name?: string;
     email: string;
-    subject: string;
+    subject: Subject;
     role: string;
 }
-
-export const Roles = [
-    { key: 'Maestro', value: 'Maestro'},
-    { key: 'DI', value: 'Diseñador Instruccional'},
-    { key: 'AP', value: 'Administrador de Proyecto'}
-]
+export interface Subject {
+    key: string,
+    name: string
+}

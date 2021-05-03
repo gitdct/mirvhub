@@ -32,7 +32,6 @@ export class ModelUploadComponent {
     this.task = this.firestorage.upload(modelpath, this.file);
     this.percentage = this.task.percentageChanges();
     this.snapshot = this.task.snapshotChanges().pipe(
-      tap(console.log),
       finalize( async() => {
         this.downloadURL = await ref.getDownloadURL().toPromise();
         this.firestore.collection('files').add({downloadURL: this.downloadURL, modelpath});

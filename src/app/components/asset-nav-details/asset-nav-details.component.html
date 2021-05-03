@@ -1,0 +1,89 @@
+<section class="sidenav-content" *ngIf="asset != null">
+  <div class="asset-details-img">
+    <div id="close-details" (click)="closeDetailse()">x</div>
+    <img [src]="asset.imgURL">
+  </div>
+  <div class="asset-details-primary">
+    <p><span class="span-new" *ngIf="isNew">NUEVO</span></p>
+    <h4>{{asset.name}}</h4>
+    <p>{{subject.value}}</p>
+  </div>
+  <div class="asset-details-secondary">
+    <small><span *ngIf="!asset.assetbundle">Asset</span><span *ngIf="asset.assetbundle">Assetbundle</span> /
+      {{subject.value}}</small>
+    <div class="tags">
+      <span *ngFor="let tag of tags" class="label label-info">{{tag}}</span>
+    </div>
+    <hr>
+    <h5>Información</h5>
+    <p>{{asset.description}}</p>
+    <p><b>Nombre:</b> {{asset.name}}</p>
+    <p><b>Creado por:</b> {{asset.createdby}}</p>
+    <p><b>Tipo: </b> <span *ngIf="!asset.assetbundle">Asset</span><span *ngIf="asset.assetbundle">Assetbundle</span></p>
+    <p><b>Solicitante: </b> {{solicitor.name}}</p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Size</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="propertyExists(asset.files.andab)">
+          <td>Assetbundle Android</td>
+          <td>{{fileSize(asset.files.andab[asset.files.andab.length - 1].size)}}</td>
+          <td><a (click)="getAssetUrl(asset, 'andab')">Descargar</a></td>
+        </tr>
+        <tr *ngIf="propertyExists(asset.files.iosab)">
+          <td>Assetbundle IOS</td>
+          <td>{{fileSize(asset.files.iosab[asset.files.iosab.length - 1].size)}}</td>
+          <td><a (click)="getAssetUrl(asset, 'iosab')">Descargar</a></td>
+        </tr>
+        <tr *ngIf="propertyExists(asset.files.glb)">
+          <td>glb</td>
+          <td>{{fileSize(asset.files.glb[asset.files.glb.length - 1].size)}}</td>
+          <td><a (click)="getAssetUrl(asset, 'glb')">Descargar</a></td>
+        </tr>
+        <tr *ngIf="propertyExists(asset.files.fbx)">
+          <td>fbx</td>
+          <td>{{fileSize(asset.files.fbx[asset.files.fbx.length - 1].size)}}</td>
+          <td><a (click)="getAssetUrl(asset, 'fbx')">Descargar</a></td>
+        </tr>
+        <tr *ngIf="propertyExists(asset.files.obj)">
+          <td>obj</td>
+          <td>{{fileSize(asset.files.obj[asset.files.obj.length - 1].size)}}</td>
+          <td><a (click)="getAssetUrl(asset, 'obj')">Descargar</a></td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div class="buttons" *ngIf="asset.createdby == sessionName ? true : false">
+      <button type="button" class="btn btn-icon btn-primary" (click)="openModal = true">
+        <cds-icon shape="pencil" solid="true" size="md"></cds-icon> Editar
+      </button>
+    </div>
+
+  </div>
+</section>
+
+
+<clr-modal [(clrModalOpen)]="openModal" clrModalSize="lg" [clrModalClosable]="false">
+  <h3 class="modal-title">Editar Asset</h3>
+  <div class="modal-body">
+    <p>¿Que acción desea realizar: borrar o editar un asset?</p>
+    <ul class="list">
+      <li>Si borra el asset toda información relacionada sera eliminada permanentemente.</li>
+      <li>Si edita el asset podra actualizar la información .</li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="openModal = false">Cancelar</button>
+    <button type="button" class="btn btn-primary" [routerLink]="['edit/information', asset.id]" (click)="openModal = false">Editar información</button>
+    <button type="button" class="btn btn-primary" [routerLink]="['edit/upload/files', 'assetbundle', asset.id]" (click)="openModal = false" *ngIf="asset.assetbundle">Subir archivos</button>
+    <button type="button" class="btn btn-primary" [routerLink]="['edit/upload/files', 'asset', asset.id]" (click)="openModal = false" *ngIf="!asset.assetbundle">Subir archivos</button>
+    <!-- <button type="button" class="btn btn-danger" (click)="openModal = false">Borrar</button> -->
+  </div>
+</clr-modal>

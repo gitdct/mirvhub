@@ -1,0 +1,19 @@
+<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false">
+    <h3 class="modal-title" *ngIf="!tagCreationSuccess">Agregar tag</h3>
+    <h3 class="modal-title" *ngIf="tagCreationSuccess">¡Alta Exitosa!</h3>
+    <div class="modal-body">
+        <div *ngIf="!tagCreationSuccess">
+            <p>Ingrese el nuevo tag, procure que sea breve y concreto y que aluda al contenido del nuevo recurso que desea ingresar.</p>
+            <clr-input-container>
+                <label>Tag</label>
+                <input clrInput placeholder="Tag" name="tag" [(ngModel)]="newTag.tag"/>
+            </clr-input-container>
+        </div>
+        <clr-alert [clrAlertType]="'danger'" [clrAlertIcon]="'exclamation-circle'" [clrAlertClosable]="false" *ngIf="tagAlreadyExists"><clr-alert-item>Este tag ya existe. Verifique nuevamente la información de la materia.</clr-alert-item></clr-alert>
+        <clr-alert [clrAlertType]="'success'" [clrAlertIcon]="'success-standard'" [clrAlertClosable]="false" *ngIf="tagCreationSuccess"><clr-alert-item>El tag {{newTag.tag}} fue dado de alta exitosamente</clr-alert-item></clr-alert>
+    </div>
+    <div class="modal-footer" *ngIf="!tagCreationSuccess">
+      <button type="button" class="btn btn-outline" [routerLink]="['../']">Cancelar</button>
+      <button type="button" class="btn btn-primary" (click)="submitTag()" [disabled]="newTag.tag == null || newTag.tag == ''">Agregar Tag</button>
+    </div>
+</clr-modal>

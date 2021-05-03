@@ -1,0 +1,25 @@
+<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false">
+    <h3 class="modal-title" *ngIf="!subjectCreationSuccess">Agregar materia</h3>
+    <h3 class="modal-title" *ngIf="subjectCreationSuccess">¡Alta Exitosa!</h3>
+    <div class="modal-body">
+        <div *ngIf="!subjectCreationSuccess">
+            <p>Ingrese la clave y el nombre de la materia nueva</p>
+            <div class="flex">
+                <clr-input-container>
+                    <label>Clave de la materia</label>
+                    <input clrInput placeholder="Clave de la materia" name="key" [(ngModel)]="newSubject.key"/>
+                </clr-input-container>
+                <clr-input-container>
+                    <label>Nombre de la materia</label>
+                    <input clrInput placeholder="Nombre de la materia" name="value" [(ngModel)]="newSubject.value"/>
+                </clr-input-container>
+            </div>
+        </div>
+        <clr-alert [clrAlertType]="'danger'" [clrAlertIcon]="'exclamation-circle'" [clrAlertClosable]="false" *ngIf="subjectAlreadyExists"><clr-alert-item>Esta materia ya existe. Verifique nuevamente la información de la materia.</clr-alert-item></clr-alert>
+        <clr-alert [clrAlertType]="'success'" [clrAlertIcon]="'success-standard'" [clrAlertClosable]="false" *ngIf="subjectCreationSuccess"><clr-alert-item>La materia {{newSubject.key}} {{newSubject.value}} fue dada de alta exitosamente</clr-alert-item></clr-alert>
+    </div>
+    <div class="modal-footer" *ngIf="!subjectCreationSuccess">
+      <button type="button" class="btn btn-outline" [routerLink]="['../']">Cancelar</button>
+      <button type="button" class="btn btn-primary" (click)="submitSubject()" [disabled]="newSubject.key == null || newSubject.key == '' || newSubject.value == null || newSubject.value == ''">Agregar Materia</button>
+    </div>
+</clr-modal>

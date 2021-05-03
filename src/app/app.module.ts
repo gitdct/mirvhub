@@ -25,11 +25,22 @@ import { UserSignupComponent } from './components/user-signup/user-signup.compon
 import { UserLoginComponent } from './components/user-login/user-login.component';
 
 import { NgxDropzoneModule } from 'ngx-dropzone';
+import { CdsModule } from '@cds/angular';
 
 import { FirebaseMethodsService } from './services/firebase-methods.service';
 import { ModalMessageComponent } from './components/modal-message/modal-message.component';
 import { AssetsLibraryComponent } from './components/assets-library/assets-library.component';
-import { AssetCardComponent } from './components/asset-card/asset-card.component';
+import { SubjectFormComponent } from './components/subject-form/subject-form.component';
+import { RoleFormComponent } from './components/role-form/role-form.component';
+import { TagFormComponent } from './components/tag-form/tag-form.component';
+import { AddNewResourceViewComponent } from './components/add-new-resource-view/add-new-resource-view.component';
+import { AssetbundleFormComponent } from './components/assetbundle-form/assetbundle-form.component';
+import { SolicitorFormComponent } from './components/solicitor-form/solicitor-form.component';
+import { AssetNavDetailsComponent } from './components/asset-nav-details/asset-nav-details.component';
+import { ProjectsComponent } from './components/projects/projects.component';
+import { DocumentationComponent } from './components/documentation/documentation.component';
+import { EditionFormComponent } from './components/edition-form/edition-form.component';
+import { UpdateFileFormComponent } from './components/update-file-form/update-file-form.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +57,17 @@ import { AssetCardComponent } from './components/asset-card/asset-card.component
     UserLoginComponent,
     ModalMessageComponent,
     AssetsLibraryComponent,
-    AssetCardComponent
+    SubjectFormComponent,
+    RoleFormComponent,
+    TagFormComponent,
+    AddNewResourceViewComponent,
+    AssetbundleFormComponent,
+    SolicitorFormComponent,
+    AssetNavDetailsComponent,
+    ProjectsComponent,
+    DocumentationComponent,
+    EditionFormComponent,
+    UpdateFileFormComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +79,7 @@ import { AssetCardComponent } from './components/asset-card/asset-card.component
     FormsModule,
     ReactiveFormsModule,
     NgxDropzoneModule,
+    CdsModule,
     HttpClientModule
   ],
   providers: [

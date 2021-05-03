@@ -1,0 +1,151 @@
+<form class="clr-form clr-form-compact">
+
+    <div *ngIf="type == 'asset'">
+
+        <p>Aqui puedes subir tus nuevos archivos</p>
+
+        <ngx-dropzone (change)="onDropNewAssetFile($event)" (maxFiles)="1" #assetFile>
+            <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+            <ngx-dropzone-preview [removable]="true" (removed)="onRemoveAssetFile('glb')" *ngIf="fileGlb != null">
+                <ngx-dropzone-label>{{ fileGlb.name }}</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+            <ngx-dropzone-preview [removable]="true" (removed)="onRemoveAssetFile('fbx')" *ngIf="fileFbx != null">
+                <ngx-dropzone-label>{{ fileFbx.name }}</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+            <ngx-dropzone-preview [removable]="true" (removed)="onRemoveAssetFile('obj')" *ngIf="fileObj != null">
+                <ngx-dropzone-label>{{ fileObj.name }}</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+        </ngx-dropzone>
+
+        <div class="alert alert-danger" role="alert" *ngIf="fileDangerMessage >= 0">
+            <div class="alert-items">
+                <div class="alert-item static">
+                    <div class="alert-icon-wrapper">
+                        <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                    </div>
+                    <span class="alert-text">{{fileMessages[fileDangerMessage]}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="m5p1p">
+            <div class="alert alert-info" role="alert">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            <p>Las unicas extensiones permitidas son: glb, fbx, obj.
+                                <br><strong>Nota:</strong> De estos formatos solo puede subir uno de cada uno por
+                                registro.
+                            </p>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <div *ngIf="type == 'assetbundle'">
+
+        <p>Aqui puedes subir tu nuevo assetbundle para Android</p>
+
+        <ngx-dropzone (change)="onDropNewAndroidAssetbundleFile($event)" (maxFiles)="1" #assetFile>
+            <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+            <ngx-dropzone-preview *ngIf="fileAndroid != null" [removable]="true"
+                (removed)="onRemoveAndroidAssetbundleFile()">
+                <ngx-dropzone-label>{{ fileAndroid.name }}</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+        </ngx-dropzone>
+
+        <div class="alert alert-danger" role="alert" *ngIf="fileDangerMessage >= 0">
+            <div class="alert-items">
+                <div class="alert-item static">
+                    <div class="alert-icon-wrapper">
+                        <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                    </div>
+                    <span class="alert-text">{{fileMessages[fileDangerMessage]}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="alert alert-warning" role="alert">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            Asegurese que el assetbundle que esta subiendo sea para Android.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <p>Aqui puedes subir tu nuevo assetbundle para IOS</p>
+
+        <ngx-dropzone (change)="onDropNewIOSAssetbundleFile($event)" (maxFiles)="1" #assetFile>
+            <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+            <ngx-dropzone-preview *ngIf="fileIos != null" [removable]="true" (removed)="onRemoveIOSAssetbundleFile()">
+                <ngx-dropzone-label>{{ fileIos.name }}</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+        </ngx-dropzone>
+
+        <div class="alert alert-danger" role="alert" *ngIf="fileDangerMessage >= 0">
+            <div class="alert-items">
+                <div class="alert-item static">
+                    <div class="alert-icon-wrapper">
+                        <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                    </div>
+                    <span class="alert-text">{{fileMessages[fileDangerMessage]}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="alert alert-warning" role="alert">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            Asegurese que el assetbundle que esta subiendo sea para IOS.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clr-form-control" style="margin-top:5%">
+        <div>
+            <button class="btn btn-outline" [routerLink]="['/library']">Cancelar</button>
+            <button class="btn btn-success" (click)="submit()" [disabled]="submitAllowance()">Subir archivos</button>
+        </div>
+    </div>
+
+
+</form>
+
+<app-modal-message [messageTitle]="'Archivos cargados exitosamente'" [messageText]="messageText" (accept)="accept()"
+    *ngIf="messageText != null"></app-modal-message>

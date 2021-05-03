@@ -1,0 +1,274 @@
+<clr-wizard #wizardlg [(clrWizardOpen)]="lgOpen" clrWizardSize="xl">
+    <clr-wizard-title>Ingresa la información del recurso que deseas subir</clr-wizard-title>
+  
+    <clr-wizard-button (click)="cancelForm()" [type]="'cancel'">Cancelar</clr-wizard-button>
+    <clr-wizard-button [type]="'previous'">Regresar</clr-wizard-button>
+    <clr-wizard-button [type]="'next'">Siguiente</clr-wizard-button>
+    <clr-wizard-button (click)="uploadForm()" [type]="'finish'" *ngIf="readyToUpload">Finalizar</clr-wizard-button>
+    
+    <clr-wizard-page [clrWizardPageNextDisabled]="!formPageOne.valid">
+      <ng-template clrPageTitle>Información general</ng-template>
+      <form clrForm #formPageOne="ngForm">
+        <clr-input-container>
+          <label>Nombre</label>
+            <input clrInput required type="text" [(ngModel)]="newRegistry.name" name="name"/>
+            <clr-control-helper>Coloque un nombre al recurso</clr-control-helper>
+            <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+        </clr-input-container>
+        <clr-textarea-container>
+          <label>Descripcion</label>
+          <textarea clrTextarea required [(ngModel)]="newRegistry.description" name="description"></textarea>
+          <clr-control-helper>Inserte una descripción breve</clr-control-helper>
+          <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+        </clr-textarea-container>
+      </form>
+    </clr-wizard-page>
+    
+    <clr-wizard-page>
+      <ng-template clrPageTitle>Información del solicitante</ng-template>
+      
+      <clr-dropdown>
+        <button clrDropdownTrigger class="dropdown-toggle btn btn-primary">
+          Solicitantes
+          <clr-icon shape="caret down"></clr-icon>
+        </button>
+        <clr-dropdown-menu *clrIfOpen clrPosition="bottom-left">
+          <a [routerLink]="" queryParamsHandling="preserve" (click)="selectSolicitor(solicitorsubject, solicitorrole, solicitor)" clrDropdownItem *ngFor="let solicitor of solicitors; let i = index">{{solicitor.name}}</a>
+        </clr-dropdown-menu>
+      </clr-dropdown>
+
+      <p class="p6">Puede omitir este paso si asi lo desea</p>
+      <p class="p6">Para añadir nuevo solicitante clic <a [routerLink]="[{outlets: { 'auxiliar': ['solicitor-form']}}]">aqui</a></p>
+      
+      <form clrForm #formPageTwo="ngForm">
+        <clr-input-container>
+            <label>Nombre</label>
+          <input clrInput required type="text" [(ngModel)]="solicitorForm.name" name="solicitorname" [readonly]="!newSolicitor">
+          <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+        </clr-input-container>
+        <clr-input-container>
+          <label>Email</label>
+          <input clrInput required type="text" [(ngModel)]="solicitorForm.email" name="solicitoremail" [readonly]="!newSolicitor">
+          <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+        </clr-input-container>
+        <clr-input-container>
+          <label>Materia</label>
+          <input #solicitorsubject clrInput required type="text" name="solicitorsubject" [readonly]="!newSolicitor">
+          <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+        </clr-input-container>
+        <clr-input-container>
+          <label>Rol</label>
+          <input #solicitorrole clrInput required type="text" name="solicitorrole" [readonly]="!newSolicitor">
+          <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+        </clr-input-container>
+  
+      </form>
+    </clr-wizard-page>
+  
+    
+    <clr-wizard-page [clrWizardPageNextDisabled]="newRegistry.files.andab.length == 0">
+      <ng-template clrPageTitle>Subir Assetbundle de Android</ng-template>
+      <div class="m5p1p">
+        Suba su archivo arrastrandolo al cuadro o dando clic en el cuadro y seleccionand su archivo.
+      </div>
+      
+      <ngx-dropzone (change)="onDropNewAndroidAssetbundleFile($event)" (maxFiles)="1" #assetFile>
+        <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngIf="fileAndroid != null" [removable]="true" (removed)="onRemoveAndroidAssetbundleFile()">
+          <ngx-dropzone-label>{{ fileAndroid.name }}</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+      
+      <div class="alert alert-danger" role="alert" *ngIf="fileDangerMessage >= 0">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">{{fileMessages[fileDangerMessage]}}</span>
+            </div>
+        </div>
+      </div>
+  
+      <div class="m5p1p">
+        <div class="alert alert-warning" role="alert">
+          <div class="alert-items">
+              <div class="alert-item static">
+                  <div class="alert-icon-wrapper">
+                      <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                  </div>
+                  <span class="alert-text">
+                      Asegurese que el assetbundle que esta subiendo sea para Android.
+                  </span>
+              </div>
+          </div>
+        </div>
+      </div>
+  
+    </clr-wizard-page>
+
+    <clr-wizard-page [clrWizardPageNextDisabled]="newRegistry.files.iosab.length == 0">
+      <ng-template clrPageTitle>Subir Assetbundle de IOS</ng-template>
+      <div class="m5p1p">
+        Suba su archivo arrastrandolo al cuadro o dando clic en el cuadro y seleccionand su archivo.
+      </div>
+      
+      <ngx-dropzone (change)="onDropNewIOSAssetbundleFile($event)" (maxFiles)="1" #assetFile>
+        <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngIf="fileIos != null" [removable]="true" (removed)="onRemoveIOSAssetbundleFile()">
+          <ngx-dropzone-label>{{ fileIos.name }}</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+      
+      <div class="alert alert-danger" role="alert" *ngIf="fileDangerMessage >= 0">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">{{fileMessages[fileDangerMessage]}}</span>
+            </div>
+        </div>
+      </div>
+  
+      <div class="m5p1p">
+        <div class="alert alert-warning" role="alert">
+          <div class="alert-items">
+              <div class="alert-item static">
+                  <div class="alert-icon-wrapper">
+                      <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                  </div>
+                  <span class="alert-text">
+                      Asegurese que el assetbundle que esta subiendo sea para IOS.
+                  </span>
+              </div>
+          </div>
+        </div>
+      </div>
+  
+    </clr-wizard-page>
+    
+    <clr-wizard-page [clrWizardPageNextDisabled]="fileImage == null">
+      <ng-template clrPageTitle>Subir imagen</ng-template>
+      <p>Suba una imagen de previsualización del registro.</p>
+      <ngx-dropzone (change)="onDropImage($event)" (maxFiles)="1" #imgFile>
+        <ngx-dropzone-label>Arrastra tu archivo aqui</ngx-dropzone-label>
+        <ngx-dropzone-image-preview  [file]="fileImage" *ngIf="fileImage != null" [removable]="true" (removed)="onRemoveImage()">
+          <!-- <ngx-dropzone-label>{{ fileImage.name }}</ngx-dropzone-label> -->
+        </ngx-dropzone-image-preview>
+      </ngx-dropzone>
+  
+      <div class="alert alert-danger" role="alert" *ngIf="fileDangerMessage >= 0">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">{{fileMessages[fileDangerMessage]}}</span>
+            </div>
+        </div>
+      </div>
+    </clr-wizard-page>
+    
+    <clr-wizard-page>
+  
+      <ng-template clrPageTitle>Subir target</ng-template>
+      <p>Suba una imagen target para el assetbundle del registro.</p>
+      <ngx-dropzone (change)="onAddTarget($event)" (maxFiles)="1" #targetFile>
+        <ngx-dropzone-label>Arrastra la imagen target aqui</ngx-dropzone-label>
+        <ngx-dropzone-image-preview  [file]="fileImageTarget" *ngIf="fileImageTarget != null" [removable]="true" (removed)="onRemoveTarget()">
+          <!-- <ngx-dropzone-label>{{ fileImageTarget.name }}</ngx-dropzone-label> -->
+        </ngx-dropzone-image-preview>
+      </ngx-dropzone>
+  
+      <div class="alert alert-danger" role="alert" *ngIf="fileDangerMessage >= 0">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">{{fileMessages[fileDangerMessage]}}</span>
+            </div>
+        </div>
+      </div>
+  
+      <div class="alert alert-success" role="alert">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+                </div>
+                <span class="alert-text">La imagen para el target del assetbundle es completamente opcional, por lo que puede omitir esta sección, si asi lo desea, dando clic en Siguiente.</span>
+            </div>
+        </div>
+      </div>
+    </clr-wizard-page>
+    
+    <clr-wizard-page>
+  
+      <ng-template clrPageTitle>Colocar tags</ng-template>
+      <p>Elija los tags que usted considere que tienen relación con el recurso que esta subiendo, si no encuentra algun tag o desea agregar uno nuevo de clic <a [routerLink]="[{outlets: { 'auxiliar': ['tag-form']}}]">aqui</a></p>
+      <span class="label clickable" [ngClass]="(tagsSelected.indexOf(tag.id) >= 0) ? 'label-info' : 'label-light-blue'" *ngFor="let tag of tags" (click)="onTagSelect(tag.id, $event)">{{tag.tag}} <clr-icon shape="times" *ngIf="tagsSelected.indexOf(tag.id) >= 0"></clr-icon></span>
+    </clr-wizard-page>
+  
+  
+    <clr-wizard-page (clrWizardPageOnLoad)="validBeforeSubmit()">
+  
+      <ng-template clrPageTitle>Enviar información</ng-template>
+      <div class="alert alert-danger" role="alert" *ngIf="fileDangerMessage >= 0">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">{{fileMessages[fileDangerMessage]}}</span>
+            </div>
+        </div>
+      </div>
+      <p>Revise toda la información que se muestra a continuación. Si es correcta puede dar clic en finalizar para ingresar el registro.</p>
+  
+  
+      <p><b>Nombre:</b> {{newRegistry.name}}</p>
+      <p><b>Descripción:</b> {{newRegistry.description}}</p>
+      <p><b>Creado por:</b> {{newRegistry.createdby}}</p>
+      <p><b>Solicitado por:</b> {{solicitorForm.name}}</p>
+      <p><b>Etiquetas:</b> <span class="label label-info" *ngFor="let tag of tagsSelected">{{getTagName(tag)}}</span></p>
+      <p><b>Archivos</b></p>
+      <hr>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="left">Extensiones</th>
+            <th>Existente</th>
+            <th>Tamaño</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left">assetbundle de android</td>
+            <td><clr-icon class="check-ok" shape="check-circle" *ngIf="newRegistry.files.andab.length > 0"></clr-icon><clr-icon class="not-present" shape="window-close" *ngIf="newRegistry.files.andab.length == 0"></clr-icon></td>
+            <td><span *ngIf="newRegistry.files.andab.length > 0">{{newRegistry.files.andab[0].size}} B</span><span *ngIf="newRegistry.files.andab.length == 0">N/A</span></td>
+          </tr>
+          <tr>
+            <td class="left">assetbundle de ios</td>
+            <td><clr-icon class="check-ok" shape="check-circle" *ngIf="newRegistry.files.iosab.length > 0"></clr-icon><clr-icon class="not-present" shape="window-close" *ngIf="newRegistry.files.iosab.length == 0"></clr-icon></td>
+            <td><span *ngIf="newRegistry.files.iosab.length > 0">{{newRegistry.files.iosab[0].size}} B</span><span *ngIf="newRegistry.files.iosab.length == 0">N/A</span></td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <p><b>Imagen de previsualización:</b> </p>
+      <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" [file]="fileImage" *ngIf="fileImage != null"></ngx-dropzone-image-preview>
+  
+      <div *ngIf="fileImageTarget != null">
+        <p><b>Previsualización de imagen target:</b> </p>
+        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" [file]="fileImageTarget" *ngIf="fileImageTarget != null"></ngx-dropzone-image-preview>
+      </div>
+  
+  
+    </clr-wizard-page>
+  </clr-wizard>
+  
+  <router-outlet name="auxiliar"></router-outlet>
+  
+  <app-modal-message [messageTitle]="messageTitle" [messageText]="messageText" (accept)="accept()" *ngIf="messageText != null"></app-modal-message>

@@ -1,3 +1,6 @@
+header {
+    background-color: rgba(70, 126, 173, 1);
+}
 .titlehead{
     margin: 25%;
     color: aliceblue;
@@ -11,4 +14,12 @@ clr-icon[shape="user"]
 button[aria-label="Dropdown demo button"]
 {
     margin: 0 1.5rem 0 0;
+}
+.title {
+    height: 100%;
+}
+.title img {
+    max-width: 100%;
+    object-fit: cover;
+    height: 100%;
 }

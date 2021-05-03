@@ -3,7 +3,7 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
 export var User:string = null;
@@ -13,7 +13,13 @@ export var User:string = null;
 })
 export class FirebaseMethodsService {
 
-  public sessionData: BehaviorSubject<any> = new BehaviorSubject({active: false, name: null});
+  public sessionData: BehaviorSubject<any> = new BehaviorSubject({active: false, abbreviatedName: null, name: null});
+  public assets: BehaviorSubject<any> = new BehaviorSubject([]);
+  public tags: BehaviorSubject<any> = new BehaviorSubject([]);
+  public roles: BehaviorSubject<any> = new BehaviorSubject([]);
+  public subjects: BehaviorSubject<any> = new BehaviorSubject([]);
+  public solicitors: BehaviorSubject<any> = new BehaviorSubject([]);
+  public assetSelected: BehaviorSubject<any> = new BehaviorSubject(null);
 
   private task: AngularFireUploadTask;
 
@@ -25,74 +31,146 @@ export class FirebaseMethodsService {
     private firestorage: AngularFireStorage,
     private fireauth: AngularFireAuth,
     private router: Router
-  ) { }
+  ) {
 
-  sessionIsActive(): Observable<any>
-  {
-    return this.sessionData.asObservable();
+    this.db.database.ref('/assets').on('child_added', async(snapshot) => {
+      let tmpArr = this.assets.getValue();
+      const imgUrl = await this.getImageUrl(snapshot.key, snapshot.val().imgext);
+      tmpArr.push({ ...{id: snapshot.key, imgURL: imgUrl}, ...snapshot.val()});
+      this.assets.next(tmpArr);
+    });
+    this.db.database.ref('/assets').on('child_removed', snapshot => {
+      let tmpArr = this.assets.getValue();
+      tmpArr.splice(tmpArr.findIndex(({id}) => id == snapshot.key), 1);
+      this.assets.next(tmpArr);
+    });
+    this.db.database.ref('/assets').on('child_changed', async(snapshot) => {
+      let tmpArr = this.assets.getValue();
+      const imgUrl = await this.getImageUrl(snapshot.key, snapshot.val().imgext);
+      tmpArr[tmpArr.findIndex(({id}) => id == snapshot.key)] = { ...{id: snapshot.key, imgURL: imgUrl}, ...snapshot.val()};
+      this.assets.next(tmpArr);
+    });
+
+    this.db.database.ref('/tags').on('child_added', snapshot => {
+      let tmpArr = this.tags.getValue();
+      tmpArr.push({ ...{id: snapshot.key}, ...snapshot.val()});
+      this.tags.next(tmpArr);
+    });
+    this.db.database.ref('/tags').on('child_removed', snapshot => {
+      let tmpArr = this.tags.getValue();
+      tmpArr.splice(tmpArr.findIndex(({id}) => id == snapshot.key), 1);
+      this.tags.next(tmpArr);
+    });
+    this.db.database.ref('/tags').on('child_changed', snapshot => {
+      let tmpArr = this.tags.getValue();
+      tmpArr[tmpArr.findIndex(({id}) => id == snapshot.key)] = { ...{id: snapshot.key}, ...snapshot.val()};
+      this.tags.next(tmpArr);
+    });
+        
+    this.db.database.ref('/roles').on('child_added', snapshot => {
+      let tmpArr = this.roles.getValue();
+      tmpArr.push({ ...{id: snapshot.key}, ...snapshot.val()});
+      this.roles.next(tmpArr);
+    });
+    this.db.database.ref('/roles').on('child_removed', snapshot => {
+      let tmpArr = this.roles.getValue();
+      tmpArr.splice(tmpArr.findIndex(({id}) => id == snapshot.key), 1);
+      this.roles.next(tmpArr);
+    });
+    this.db.database.ref('/roles').on('child_changed', snapshot => {
+      let tmpArr = this.roles.getValue();
+      tmpArr[tmpArr.findIndex(({id}) => id == snapshot.key)] = { ...{id: snapshot.key}, ...snapshot.val()};
+      this.roles.next(tmpArr);
+    });
+        
+    this.db.database.ref('/subjects').on('child_added', snapshot => {
+      let tmpArr = this.subjects.getValue();
+      tmpArr.push({ ...{id: snapshot.key}, ...snapshot.val()});
+      this.subjects.next(tmpArr);
+    });
+    this.db.database.ref('/subjects').on('child_removed', snapshot => {
+      let tmpArr = this.subjects.getValue();
+      tmpArr.splice(tmpArr.findIndex(({id}) => id == snapshot.key), 1);
+      this.subjects.next(tmpArr);
+    });
+    this.db.database.ref('/subjects').on('child_changed', snapshot => {
+      let tmpArr = this.subjects.getValue();
+      tmpArr[tmpArr.findIndex(({id}) => id == snapshot.key)] = { ...{id: snapshot.key}, ...snapshot.val()};
+      this.subjects.next(tmpArr);
+    });
+    
+    this.db.database.ref('/solicitors').on('child_added', snapshot => {
+      let tmpArr = this.solicitors.getValue();
+      tmpArr.push({ ...{id: snapshot.key}, ...snapshot.val()});
+      this.solicitors.next(tmpArr);
+    });
+    this.db.database.ref('/solicitors').on('child_removed', snapshot => {
+      let tmpArr = this.solicitors.getValue();
+      tmpArr.splice(tmpArr.findIndex(({id}) => id == snapshot.key), 1);
+      this.solicitors.next(tmpArr);
+    });
+    this.db.database.ref('/solicitors').on('child_changed', snapshot => {
+      let tmpArr = this.solicitors.getValue();
+      tmpArr[tmpArr.findIndex(({id}) => id == snapshot.key)] = { ...{id: snapshot.key}, ...snapshot.val()};
+      this.solicitors.next(tmpArr);
+    });
+
+
+
+
+
+
+  
+    /* setTimeout(() => {
+      console.log(this.tags.getValue());
+    },4000); */
+    /* this.db.database.ref('/tags/'+'-MUu5hvqW0xdn-g482J2').once('value').then((snapshot) => {
+      console.log(snapshot.exists());
+    }) */
+
+
+
+    this.db.database.ref('/tags').orderByChild("tag").equalTo("Biologia").once("child_added", snapshot => {
+      /* console.log(snapshot.exists());
+      if (snapshot.exists()){
+        const userData = snapshot.val();
+        console.log("exists!", userData);
+      } */
+    });
+
+
   }
 
-  getAssetData = async(assetId) =>
-  {
-    return await this.firestore.collection('assets').doc(assetId).ref.get().then((data) => {
-      return data.data();
-    });
+  createSubject(data) {
+    this.db.database.ref('/subjects').push().set(data);
+  }
+  
+  createRole(data) {
+    this.db.database.ref('/roles').push().set(data);
+  }
+  
+  createSolicitor(data) {
+    this.db.database.ref('/solicitors').push().set(data);
   }
 
-  getAllAssetData = async() =>
-  {
-    return await this.firestore.collection('assets').ref.get().then((data) => {
-      data.forEach((doc) => {
-        let element = doc.data();
-        element.id = doc.id;
-        this.collectionData.push(element);
-      });
-      return this.collectionData;
-    });
+  createTag(data) {
+    this.db.database.ref('/tags').push().set(data);
   }
 
   waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 
-  dataTest: Observable<any>;
-  
-  getAllAssetsData()
-  {
-    let allassetsdata = [];
-    return new Promise((res) => {
-      return this.db.database.ref('assets/').once('value').then(async data => {
-
-
-        data.forEach(element => {
-          let elem = {};
-          elem = element.val();
-          elem['id'] = element.key;
-          allassetsdata.push(elem);
-        });
-
-        for (let index = 0; index < allassetsdata.length; index++) {
-          allassetsdata[index]['downloadURL'] = await this.getAssetUrl(allassetsdata[index].id);
-          allassetsdata[index]['imgURL'] = await this.getImageUrl(allassetsdata[index].id);
-        }
-        
-        /* allassetsdata.forEach(async element => {
-          this.getAssetUrl(element.id).then((url) => {
-            element['downloadURL'] = url;
-          });
-        }); */
-
-        res(allassetsdata);
-      });
-    });
+  setAssetSelected(id): void {
+    this.assetSelected.next(id);
   }
 
   uploadAssetData(data)
   {
-    return new Promise((res) => {
+    return new Promise(res => {
       let id = this.db.createPushId();
       return this.db.database.ref('assets/' + id).set(data).then(() => {
         res(id);
       });
-    })
+    });
     /* return new Promise<any>((resolve, reject) => {
       this.firestore
           .collection('assets')
@@ -103,33 +181,58 @@ export class FirebaseMethodsService {
     }) */
   }
 
+  updateAssetData(data): Promise<any>
+  {
+    return new Promise(res => {
+      return this.db.database.ref('assets/' + data.id).set(data).then(() => {
+        res(data.id);
+      });
+    });
+  }
+
+  updateAssetImgUrl(id, url)
+  {
+    let tmpArr = this.assets.getValue();
+    tmpArr[tmpArr.findIndex((el) => el.id == id)].imgURL = url;
+    this.assets.next(tmpArr);
+  }
+
+  async existsValidation(data): Promise<any> {
+    return new Promise(res => {
+      this.db.database.ref('/assets').orderByChild("name").equalTo(data.name).once("value", snapshot => {
+        if(snapshot.exists()){
+          res(true);
+        }else{
+          res(false);
+        }
+      });
+    })
+  }
+
   uploadAssetFile(assetpath, file)
   {
-    return new Promise((res) => {
+    return new Promise<void>((res) => {
       const ref = this.firestorage.ref(assetpath);
-      return this.firestorage.upload(assetpath, file).then(() => {
+      ref.put(file).then(() => {
         res();
       });
-    })
-    /* this.percentage = this.task.percentageChanges(); */
+    });
   }
 
-  getAssetUrl(assetId): Promise<string>
+  async getAssetUrl(asset_url): Promise<string>
   {
-    return new Promise((res) => {
-      return this.firestorage.ref('assets/' + assetId).getDownloadURL().toPromise().then((url) => {
+    return await new Promise(async (res) => {
+      return await this.firestorage.ref(asset_url).getDownloadURL().toPromise().then((url) => {
         res(url);
       });
-    })
+    });
   }
 
-  getImageUrl(assetId): Promise<string>
+  async getImageUrl(id, ext)
   {
-    return new Promise((res) => {
-      return this.firestorage.ref('img/' + assetId + '.jpg').getDownloadURL().toPromise().then((url) => {
-        res(url);
-      });
-    })
+    return this.firestorage.ref('img/' + id + '.' + ext).getDownloadURL().toPromise().then(url => {
+      return url;
+    });
   }
 
   createUser = async(user): Promise<any> =>
@@ -171,7 +274,7 @@ export class FirebaseMethodsService {
   {
     let response = {};
     return new Promise<any>((resolve) => {
-
+      /* 'session' */
       return this.fireauth.setPersistence('local').then(_ => {
         return this.fireauth.signInWithEmailAndPassword(user.email, user.password).then((res) => {
           response = {status: true, text: '¡Bienvenido!'};

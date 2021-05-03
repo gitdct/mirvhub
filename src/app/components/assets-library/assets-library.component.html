@@ -1,5 +1,14 @@
+<h2>Librería de Recursos</h2>
+<hr>
 <div class="card-columns">
-    <!-- <div > -->
-        <app-asset-card *ngFor="let asset of assets" [img]="asset.imgURL" [downloadURL]="asset.downloadURL" [name]="asset.name" [desc]="asset.desc" [restype]="asset.restype" [createdat]="asset.createdat"></app-asset-card>
-    <!-- </div> -->
+    <div class="card" *ngFor="let asset of assets" (click)="selectAsset($event, asset.id)">
+        <div class="card-img">
+            <div class="head-options">
+                <span class="span-new" *ngIf="isNew(asset.createdat)">NUEVO</span>
+            </div>
+            <img src="{{asset.imgURL}}">
+            <h6>{{asset.name}}</h6>
+        </div>
+    </div>
 </div>
+  

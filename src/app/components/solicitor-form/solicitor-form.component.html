@@ -1,0 +1,47 @@
+<clr-modal [(clrModalOpen)]="modalOpen" [clrModalClosable]="false" [clrModalSize]="'xl'">
+    <h3 class="modal-title" *ngIf="!solicitorCreationSuccess">Agregar solicitante</h3>
+    <h3 class="modal-title" *ngIf="solicitorCreationSuccess">¡Alta Exitosa!</h3>
+    <div class="modal-body">
+      <div *ngIf="!solicitorCreationSuccess">
+        <p>Ingrese los datos que se solicitan a continuación para dar de alta el nuevo solicitante.</p>
+        <div class="flex">
+          <clr-input-container>
+              <label>Nombre</label>
+            <input clrInput required type="text" [(ngModel)]="newSolicitor.name" name="solicitorname">
+            <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+          </clr-input-container>
+          <clr-input-container>
+            <label>Email</label>
+            <input clrInput required type="text" [(ngModel)]="newSolicitor.email" name="solicitoremail">
+            <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+          </clr-input-container>
+          <clr-select-container>
+              <label>Materia</label>
+              <select clrSelect required name="solicitorsubject" [(ngModel)]="newSolicitor.subject">
+                <option [value]="null" selected></option>
+                <option *ngFor="let subject of subjects" [value]="subject.id">{{subject.value}}</option>
+              </select>
+              <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+          </clr-select-container>
+          <clr-select-container>
+              <label>Rol</label>
+              <select clrSelect required name="solicitorrole" [(ngModel)]="newSolicitor.role">
+                  <option [value]="null" selected></option>
+                  <option *ngFor="let role of roles" [value]="role.id">{{role.value}}</option>
+              </select>
+              <clr-control-error>¡Este campo es obligatorio!</clr-control-error>
+          </clr-select-container>
+        </div>
+        <p class="p6"><strong>Nota:</strong> Si no encuentra la materia o el rol que esta buscando puede añadirlos.</p>
+      </div>
+      <clr-alert [clrAlertType]="'danger'" [clrAlertIcon]="'exclamation-circle'" [clrAlertClosable]="true" *ngIf="solicitorAlreadyExists"><clr-alert-item>El solicitante que desea ingresar ya existe. Verifique nuevamente la información de la materia.</clr-alert-item></clr-alert>
+      <clr-alert [clrAlertType]="'success'" [clrAlertIcon]="'success-standard'" [clrAlertClosable]="true" *ngIf="solicitorCreationSuccess"><clr-alert-item>El solicitante {{newSolicitor.name}} fue dado de alta exitosamente.</clr-alert-item></clr-alert>
+    </div>
+    <div class="modal-footer" *ngIf="!solicitorCreationSuccess">
+        <button class="btn btn-link" [routerLink]="[{outlets: { 'auxiliar2': ['subject-form']}}]">Agregar materia</button>
+        <button class="btn btn-link" [routerLink]="[{outlets: { 'auxiliar2': ['role-form']}}]">Agregar rol</button>
+        <button type="button" class="btn btn-outline" [routerLink]="['../']">Cancelar</button>
+        <button type="button" class="btn btn-success" (click)="submitSolicitor()" [disabled]="newSolicitor.name == null || newSolicitor.email == null || newSolicitor.subject == null || newSolicitor.role == null">Agregar solicitante</button>
+    </div>
+</clr-modal>
+<router-outlet name="auxiliar2"></router-outlet>

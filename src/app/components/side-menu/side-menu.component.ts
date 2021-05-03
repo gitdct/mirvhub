@@ -1,4 +1,5 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { FirebaseMethodsService } from '../../services/firebase-methods.service';
 
@@ -7,21 +8,29 @@ import { FirebaseMethodsService } from '../../services/firebase-methods.service'
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.css']
 })
-export class SideMenuComponent implements OnInit {
+export class SideMenuComponent implements OnInit, OnDestroy {
 
-  sessionData: {active: false, name: null};
+  public sessionData;
+  public sessionDataSubscription: Subscription;
 
   constructor(
-    private firebaseMethodsService: FirebaseMethodsService,
+    public firebaseMethodsService: FirebaseMethodsService,
     private ngZone: NgZone
   ) { }
 
   ngOnInit()
   {
-    this.firebaseMethodsService.sessionIsActive().subscribe(
-      sessionData => this.ngZone.run(() => {this.sessionData = sessionData})
-    );
+    this.sessionDataSubscription = this.firebaseMethodsService.sessionData.subscribe(data => {
+      this.ngZone.run(() => {
+        this.sessionData = {...data};
+      });
+    });
     this.firebaseMethodsService.userStateChanged();
+  }
+
+  ngOnDestroy()
+  {
+    this.sessionDataSubscription.unsubscribe();
   }
 
 }
