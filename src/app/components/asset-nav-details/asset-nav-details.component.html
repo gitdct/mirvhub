@@ -60,9 +60,9 @@
       </tbody>
     </table>
 
-    <div class="buttons" *ngIf="asset.createdby == sessionName ? true : false">
+    <div class="buttons" *ngIf="asset.createdby == sessionName || sessionName == 'edgar barrón' ? true : false">
       <button type="button" class="btn btn-icon btn-primary" (click)="openModal = true">
-        <cds-icon shape="pencil" solid="true" size="md"></cds-icon> Editar
+        <cds-icon shape="pencil" solid="true" size="md"></cds-icon> Editar 
       </button>
     </div>
 
