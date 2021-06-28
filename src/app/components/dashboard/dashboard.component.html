@@ -1,0 +1,34 @@
+
+<div class="user-info-container">
+    <div class="user-image">
+        <clr-icon class="is-solid is-inverse" size="128" shape="user"></clr-icon>
+    </div>
+    <div class="user-info">
+        <span class="name">
+            Nombre de usuario
+        </span>
+        <span class="role-and-id">Rol del usuario/Nómina</span>
+    </div>
+</div>
+
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink>Información</button>
+        <clr-tab-content *clrIfActive="true">
+            <app-dashboard-user-info></app-dashboard-user-info>
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink>Recursos</button>
+        <clr-tab-content *clrIfActive>
+            <app-dashboard-resources></app-dashboard-resources>
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink>Documentación</button>
+        <clr-tab-content *clrIfActive>
+            <app-dashboard-documents></app-dashboard-documents>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

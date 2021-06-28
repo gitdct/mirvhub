@@ -3,3 +3,9 @@ app-asset-nav-details {
     max-width: 30%;
     min-width: 30%;
 }
+::ng-deep app-dashboard {
+    height: 100%;
+    display: inline-flex;
+    width: 100%;
+    flex-direction: column;
+}

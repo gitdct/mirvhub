@@ -15,6 +15,7 @@ import { ProjectsComponent } from './components/projects/projects.component';
 import { DocumentationComponent } from './components/documentation/documentation.component';
 import { EditionFormComponent } from './components/edition-form/edition-form.component';
 import { UpdateFileFormComponent } from './components/update-file-form/update-file-form.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import { AuthGuardService } from './services/auth-guard.service';
 
@@ -30,7 +31,8 @@ const routes: Routes = [
   {path: 'edit/information/:id', component: EditionFormComponent, canActivate: [AuthGuardService], children: [{path: 'solicitor-form', component: SolicitorFormComponent, outlet: 'auxiliar', children: [{path: 'subject-form', component: SubjectFormComponent, outlet: 'auxiliar2'}, {path: 'role-form', component: RoleFormComponent, outlet: 'auxiliar2'}]}, {path: 'tag-form', component: TagFormComponent, outlet: 'auxiliar'}]},
   {path: 'edit/upload/files/:type/:id', component: UpdateFileFormComponent, canActivate: [AuthGuardService]},
   {path: 'visualizer', component: ModelViewerComponent},
-  {path: '**', component: HomeComponentComponent} 
+  {path: 'user-dashboard', component: DashboardComponent, canActivate: [AuthGuardService]},
+  {path: '**', component: HomeComponentComponent}
 ];
 
 @NgModule({

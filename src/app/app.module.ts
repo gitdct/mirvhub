@@ -41,6 +41,10 @@ import { ProjectsComponent } from './components/projects/projects.component';
 import { DocumentationComponent } from './components/documentation/documentation.component';
 import { EditionFormComponent } from './components/edition-form/edition-form.component';
 import { UpdateFileFormComponent } from './components/update-file-form/update-file-form.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DashboardUserInfoComponent } from './components/dashboard-user-info/dashboard-user-info.component';
+import { DashboardResourcesComponent } from './components/dashboard-resources/dashboard-resources.component';
+import { DashboardDocumentsComponent } from './components/dashboard-documents/dashboard-documents.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +71,11 @@ import { UpdateFileFormComponent } from './components/update-file-form/update-fi
     ProjectsComponent,
     DocumentationComponent,
     EditionFormComponent,
-    UpdateFileFormComponent
+    UpdateFileFormComponent,
+    DashboardComponent,
+    DashboardUserInfoComponent,
+    DashboardResourcesComponent,
+    DashboardDocumentsComponent
   ],
   imports: [
     BrowserModule,

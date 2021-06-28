@@ -1,0 +1,39 @@
+.user-info-container, .user-info {
+    display: flex;
+    margin-bottom: 2%;
+}
+.user-image {
+    border-radius: 12px;
+    display: inline-block;
+    background-color: #948d8c;
+}
+.user-info {
+    align-items: flex-start;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 2%;
+}
+.name, .role-and-id {
+    font-size: 30px;
+    margin: 5px 0;
+}
+.name {
+    font-weight: bold;
+}
+.btn-link.nav-link {
+    font-size: 20px;
+}
+clr-tabs {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+::ng-deep .tab-content {
+    flex: 1 1 auto;
+    padding: 2%;
+}
+::ng-deep .nav .nav-link:hover, ::ng-deep .nav .nav-link.active {
+    color: #0089c3;
+    box-shadow: 0 -.3rem 0 #0089c3 inset !important;
+}

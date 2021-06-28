@@ -5,7 +5,7 @@
         </a>
     </div>
     <div class="header-actions">
-        <clr-dropdown [clrCloseMenuOnItemClick]="false" *ngIf="sessionData.active">
+        <clr-dropdown [clrCloseMenuOnItemClick]="true" *ngIf="sessionData.active">
             <button clrDropdownTrigger aria-label="Dropdown demo button">
                 <clr-icon shape="user"></clr-icon>
                 <span class="nav-text">{{sessionData.abbreviatedName}}</span>
@@ -13,14 +13,15 @@
             </button>
             <clr-dropdown-menu clrPosition="bottom-right" *clrIfOpen>
                 <label class="dropdown-header" aria-hidden="true">Opciones de usuario</label>
-                <div aria-label="Dropdown header Action 1" (click)="signOut()" clrDropdownItem>Sign Out</div>
+                <div aria-label="Dropdown header Action 1" (click)="signOut()" clrDropdownItem>Salir de sesión</div>
+                <div aria-label="Dropdown header Action 2" routerLink="user-dashboard" clrDropdownItem>Dashboard</div>
             </clr-dropdown-menu>
         </clr-dropdown>
         <a href="#" (click)="loginInit()" class="nav-link nav-icon-text" *ngIf="!sessionData.active">
-            <span class="nav-text">Login</span>
+            <span class="nav-text">Ingresar</span>
         </a>
         <a href="#" (click)="signupInit()" class="nav-link nav-icon-text" *ngIf="!sessionData.active">
-            <span class="nav-text">Signup</span>
+            <span class="nav-text">Registrarse</span>
         </a>
     </div>
 </header>
